@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Medical Services | CareBridge Hospital{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow light">CareBridge Hospital</p>
+        <h1>Medical Services</h1>
+        <p class="tagline">Comprehensive care designed around your health and wellbeing.</p>
+        <p class="hero-intro">
+            Explore the core services offered at this fictional hospital.
+            Each department below is a sample used for the student project.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Our departments</p>
+            <h2>Care across emergency, clinics and diagnostics</h2>
+            <p>Select a service to learn more. Detailed pages can be added later in the project.</p>
+        </div>
+
+        <div class="card-grid services-grid">
+            <article class="card" id="emergency-care">
+                <p class="service-icon" aria-hidden="true">+</p>
+                <h3>Emergency Care</h3>
+                <p>Urgent assessment and treatment for sudden illness and injury, available day and night.</p>
+                <a class="card-link" href="#emergency-care">Learn More</a>
+            </article>
+
+            <article class="card" id="general-medicine">
+                <p class="service-icon" aria-hidden="true">GM</p>
+                <h3>General Medicine</h3>
+                <p>First-line care for common conditions, health checks and ongoing medical follow-up.</p>
+                <a class="card-link" href="#general-medicine">Learn More</a>
+            </article>
+
+            <article class="card" id="cardiology">
+                <p class="service-icon" aria-hidden="true">CA</p>
+                <h3>Cardiology</h3>
+                <p>Heart screening, diagnosis and specialist support for cardiac health and recovery.</p>
+                <a class="card-link" href="#cardiology">Learn More</a>
+            </article>
+
+            <article class="card" id="pediatrics">
+                <p class="service-icon" aria-hidden="true">PE</p>
+                <h3>Pediatrics</h3>
+                <p>Family-focused care for infants, children and teenagers at every stage of growth.</p>
+                <a class="card-link" href="#pediatrics">Learn More</a>
+            </article>
+
+            <article class="card" id="orthopedics">
+                <p class="service-icon" aria-hidden="true">OR</p>
+                <h3>Orthopedics</h3>
+                <p>Assessment and treatment for bones, joints, muscles and sports-related injuries.</p>
+                <a class="card-link" href="#orthopedics">Learn More</a>
+            </article>
+
+            <article class="card" id="diagnostic-imaging">
+                <p class="service-icon" aria-hidden="true">DI</p>
+                <h3>Diagnostic Imaging</h3>
+                <p>X-ray, ultrasound and other imaging tests that help doctors confirm a diagnosis.</p>
+                <a class="card-link" href="#diagnostic-imaging">Learn More</a>
+            </article>
+
+            <article class="card" id="laboratory-services">
+                <p class="service-icon" aria-hidden="true">LB</p>
+                <h3>Laboratory Services</h3>
+                <p>Blood tests and other laboratory work used to guide treatment and monitor health.</p>
+                <a class="card-link" href="#laboratory-services">Learn More</a>
+            </article>
+
+            <article class="card" id="pharmacy">
+                <p class="service-icon" aria-hidden="true">RX</p>
+                <h3>Pharmacy</h3>
+                <p>Prescription medicines, counselling and convenient collection after a clinic visit.</p>
+                <a class="card-link" href="#pharmacy">Learn More</a>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Why our services</p>
+            <h2>Healthcare that is clear, calm and easy to reach</h2>
+            <p>CareBridge focuses on the patient journey from first enquiry to follow-up care.</p>
+        </div>
+
+        <div class="benefit-grid">
+            <article class="benefit">
+                <h3>Patient-centred care</h3>
+                <p>We explain options in plain language and help patients choose the next step with confidence.</p>
+            </article>
+            <article class="benefit">
+                <h3>Experienced professionals</h3>
+                <p>Fictional specialist teams work across emergency, clinics, imaging, laboratory and pharmacy.</p>
+            </article>
+            <article class="benefit">
+                <h3>Modern medical facilities</h3>
+                <p>Sample departments are presented as a contemporary hospital setting that feels organised and welcoming.</p>
+            </article>
+            <article class="benefit">
+                <h3>Convenient access</h3>
+                <p>Patients can review services online and move quickly towards booking an appointment.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container cta-inner">
+        <p class="eyebrow light">Next step</p>
+        <h2>Ready to book an appointment?</h2>
+        <p>
+            Choose a service and our team will help you find a suitable clinic time.
+            A full appointment page will be added later in this project.
+        </p>
+        <a class="btn btn-light" href="{{ url_for('appointments') }}">Book an Appointment</a>
+    </div>
+</section>
+{% endblock %}

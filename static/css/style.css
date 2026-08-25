@@ -1,0 +1,668 @@
+/* CareBridge Hospital styles
+   Colours: deep teal, soft cream, white and warm accent.
+*/
+
+:root {
+    --navy: #0c3b47;
+    --teal: #1b7a7a;
+    --teal-dark: #146363;
+    --cream: #f6f3ee;
+    --white: #ffffff;
+    --text: #1c2b33;
+    --muted: #5b6b73;
+    --border: #d7e2e4;
+    --shadow: 0 10px 30px rgba(12, 59, 71, 0.08);
+    --radius: 16px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    background: var(--cream);
+    line-height: 1.6;
+}
+
+img {
+    max-width: 100%;
+}
+
+a {
+    color: var(--teal-dark);
+}
+
+.container {
+    width: min(1100px, calc(100% - 2rem));
+    margin-inline: auto;
+}
+
+.skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    background: var(--navy);
+    color: var(--white);
+    padding: 0.6rem 1rem;
+}
+
+.skip-link:focus {
+    left: 1rem;
+    z-index: 20;
+}
+
+/* Header and navigation */
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(246, 243, 238, 0.96);
+    border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 76px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: var(--navy);
+}
+
+.logo-mark {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--navy);
+    color: var(--white);
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.logo-text strong {
+    font-size: 1.05rem;
+}
+
+.logo-text span {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.menu-button {
+    display: none;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--navy);
+    border-radius: 8px;
+    padding: 0.45rem 0.8rem;
+    font: inherit;
+    cursor: pointer;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.nav-links a:hover,
+.nav-links a:focus {
+    color: var(--teal-dark);
+}
+
+/* Shared page pieces */
+
+.eyebrow {
+    margin: 0 0 0.6rem;
+    color: var(--teal-dark);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+}
+
+.eyebrow.light {
+    color: #d7eee9;
+}
+
+h1, h2, h3 {
+    line-height: 1.2;
+    color: var(--navy);
+}
+
+h1 {
+    margin: 0 0 0.8rem;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+h2 {
+    margin: 0 0 0.8rem;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+}
+
+h3 {
+    margin: 0 0 0.5rem;
+}
+
+p {
+    margin: 0 0 1rem;
+}
+
+.section {
+    padding: 4.5rem 0;
+}
+
+.section-alt {
+    background: var(--white);
+}
+
+.section-header {
+    max-width: 640px;
+    margin-bottom: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    border-radius: 999px;
+    padding: 0.85rem 1.4rem;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.btn:hover,
+.btn:focus {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: var(--teal);
+    color: var(--white);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background: var(--teal-dark);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.btn-light {
+    background: var(--white);
+    color: var(--navy);
+}
+
+.btn-light:hover,
+.btn-light:focus {
+    background: var(--cream);
+}
+
+/* Hero */
+
+.hero {
+    background:
+        radial-gradient(circle at top right, rgba(27, 122, 122, 0.28), transparent 28%),
+        linear-gradient(135deg, var(--navy) 0%, #14555c 100%);
+    color: var(--white);
+    padding: 4.5rem 0 5rem;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 0.9fr;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.hero h1,
+.hero h2 {
+    color: var(--white);
+}
+
+.tagline {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #d9f0ec;
+}
+
+.hero-intro {
+    max-width: 36rem;
+    color: #dce7ea;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.hero-panel {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: var(--radius);
+    padding: 1.8rem;
+    box-shadow: var(--shadow);
+}
+
+.hero-panel-label {
+    color: #cfe8e4;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hero-stats {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+}
+
+.hero-stats li {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    padding-top: 0.9rem;
+}
+
+.hero-stats strong {
+    font-size: 1.5rem;
+}
+
+/* Introduction */
+
+.intro {
+    padding: 4rem 0;
+}
+
+.intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+/* Cards */
+
+.card-grid,
+.doctor-grid,
+.benefit-grid {
+    display: grid;
+    gap: 1.2rem;
+}
+
+.card-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.card,
+.doctor-card,
+.benefit {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.4rem;
+    box-shadow: var(--shadow);
+}
+
+.card:hover,
+.doctor-card:hover,
+.benefit:hover {
+    border-color: #b7d0d2;
+}
+
+.doctor-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.doctor-initials,
+.service-icon {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background: #e7f4f3;
+    color: var(--teal-dark);
+    font-weight: 700;
+}
+
+.card-link {
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--teal-dark);
+}
+
+.card-link:hover,
+.card-link:focus {
+    text-decoration: underline;
+}
+
+.services-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.page-hero {
+    background:
+        radial-gradient(circle at top right, rgba(27, 122, 122, 0.28), transparent 28%),
+        linear-gradient(135deg, var(--navy) 0%, #14555c 100%);
+    color: var(--white);
+    padding: 3.5rem 0 4rem;
+}
+
+.page-hero h1 {
+    color: var(--white);
+}
+
+.doctor-role {
+    color: var(--teal-dark);
+    font-weight: 700;
+}
+
+.benefit-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* Appointment call to action */
+
+.cta {
+    background: var(--navy);
+    color: var(--white);
+    padding: 4.5rem 0;
+}
+
+.cta-inner {
+    max-width: 680px;
+    text-align: center;
+}
+
+.cta h2 {
+    color: var(--white);
+}
+
+.cta p {
+    color: #d5e3e6;
+}
+
+/* Appointment form */
+
+.appointment-layout {
+    display: grid;
+    grid-template-columns: 1.6fr 0.9fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.appointment-form-card h2,
+.appointment-info h2 {
+    margin-top: 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.2rem;
+    margin: 1.4rem 0 1rem;
+}
+
+.form-field-full {
+    grid-column: 1 / -1;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--text);
+    font: inherit;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    outline: 2px solid var(--teal);
+    outline-offset: 1px;
+    border-color: var(--teal);
+}
+
+.form-disclaimer {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.appointment-info ul {
+    padding-left: 1.1rem;
+}
+
+.appointment-info li {
+    margin-bottom: 0.7rem;
+}
+
+.form-error {
+    background: #f8e8e8;
+    border: 1px solid #e3b6b6;
+    color: #7a2e2e;
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+}
+
+.btn-outline {
+    background: var(--white);
+    color: var(--navy);
+    border: 1px solid var(--border);
+}
+
+.btn-outline:hover,
+.btn-outline:focus {
+    background: var(--cream);
+}
+
+.confirmation-layout {
+    max-width: 760px;
+}
+
+.success-banner {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: #e7f4f3;
+    color: var(--teal-dark);
+    font-weight: 700;
+}
+
+.confirmation-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.2rem;
+    margin: 0 0 1.2rem;
+}
+
+.confirmation-details div {
+    margin: 0;
+}
+
+.confirmation-details dt {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.confirmation-details dd {
+    margin: 0.2rem 0 0;
+}
+
+.confirmation-full {
+    grid-column: 1 / -1;
+}
+
+/* Footer */
+
+.site-footer {
+    background: #092f39;
+    color: #d7e4e7;
+    padding: 3rem 0 1.5rem;
+}
+
+.site-footer h2,
+.site-footer h3 {
+    color: var(--white);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 2rem;
+}
+
+.footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-links a,
+.site-footer a {
+    color: #d7e4e7;
+    text-decoration: none;
+}
+
+.footer-links a:hover,
+.site-footer a:hover {
+    color: var(--white);
+}
+
+.footer-bottom {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.92rem;
+}
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+    .hero-grid,
+    .intro-grid,
+    .card-grid,
+    .services-grid,
+    .doctor-grid,
+    .benefit-grid,
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .appointment-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-button {
+        display: inline-block;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        right: 1rem;
+        top: 76px;
+        width: min(240px, calc(100% - 2rem));
+        flex-direction: column;
+        gap: 0;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 0.6rem;
+        box-shadow: var(--shadow);
+    }
+
+    .nav-links.is-open {
+        display: flex;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 0.7rem 0.8rem;
+        border-radius: 8px;
+    }
+
+    .nav-links a:hover {
+        background: var(--cream);
+    }
+}
+
+@media (max-width: 640px) {
+    .hero,
+    .page-hero,
+    .section,
+    .cta {
+        padding: 3rem 0;
+    }
+
+    .hero-grid,
+    .intro-grid,
+    .card-grid,
+    .services-grid,
+    .doctor-grid,
+    .benefit-grid,
+    .footer-grid,
+    .appointment-layout,
+    .form-grid,
+    .confirmation-details {
+        grid-template-columns: 1fr;
+    }
+}

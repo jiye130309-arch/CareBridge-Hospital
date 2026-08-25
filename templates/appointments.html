@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Book an Appointment | CareBridge Hospital{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow light">CareBridge Hospital</p>
+        <h1>Book an Appointment</h1>
+        <p class="tagline">Schedule a consultation with one of our healthcare specialists.</p>
+        <p class="hero-intro">
+            Submit this form to save a demo booking for the CareBridge student project.
+            This is not a real hospital appointment.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container appointment-layout">
+        <div class="card appointment-form-card">
+            <h2>Appointment request</h2>
+            <p>Complete the fields below. Required fields are marked with an asterisk (*).</p>
+
+            {% if error_message %}
+            <p class="form-error" role="alert">{{ error_message }}</p>
+            {% endif %}
+
+            <form class="appointment-form" action="{{ url_for('appointments') }}" method="post">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="full-name">Full Name *</label>
+                        <input
+                            type="text"
+                            id="full-name"
+                            name="full_name"
+                            placeholder="Jane Tan"
+                            required
+                            maxlength="100"
+                            autocomplete="name"
+                            value="{{ form_data.get('full_name', '') }}"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="email">Email Address *</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="jane@example.com"
+                            required
+                            maxlength="120"
+                            autocomplete="email"
+                            value="{{ form_data.get('email', '') }}"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="phone">Phone Number *</label>
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            placeholder="9123 4567"
+                            required
+                            maxlength="20"
+                            autocomplete="tel"
+                            value="{{ form_data.get('phone', '') }}"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="date-of-birth">Date of Birth *</label>
+                        <input
+                            type="date"
+                            id="date-of-birth"
+                            name="date_of_birth"
+                            required
+                            autocomplete="bday"
+                            value="{{ form_data.get('date_of_birth', '') }}"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="department">Select Department *</label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled {% if not form_data.get('department') %}selected{% endif %}>Choose a department</option>
+                            {% for department in departments %}
+                            <option value="{{ department }}" {% if form_data.get('department') == department %}selected{% endif %}>{{ department }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="doctor">Select Doctor *</label>
+                        <select id="doctor" name="doctor" required>
+                            <option value="" disabled {% if not form_data.get('doctor') %}selected{% endif %}>Choose a doctor</option>
+                            {% for doctor in doctors %}
+                            <option value="{{ doctor }}" {% if form_data.get('doctor') == doctor %}selected{% endif %}>{{ doctor }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="appointment-date">Preferred Appointment Date *</label>
+                        <input
+                            type="date"
+                            id="appointment-date"
+                            name="appointment_date"
+                            required
+                            value="{{ form_data.get('appointment_date', '') }}"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="appointment-time">Preferred Time *</label>
+                        <input
+                            type="time"
+                            id="appointment-time"
+                            name="appointment_time"
+                            required
+                            value="{{ form_data.get('appointment_time', '') }}"
+                        >
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label for="reason">Appointment Reason *</label>
+                        <textarea
+                            id="reason"
+                            name="reason"
+                            rows="4"
+                            placeholder="Briefly describe the reason for your visit"
+                            required
+                            maxlength="500"
+                        >{{ form_data.get('reason', '') }}</textarea>
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label for="notes">Additional Notes</label>
+                        <textarea
+                            id="notes"
+                            name="notes"
+                            rows="4"
+                            placeholder="Optional information that may help the clinic"
+                            maxlength="500"
+                        >{{ form_data.get('notes', '') }}</textarea>
+                    </div>
+                </div>
+
+                <p class="form-disclaimer">
+                    This appointment system is a demonstration created for the CareBridge Hospital student project.
+                </p>
+
+                <button class="btn btn-primary" type="submit">Book Appointment</button>
+            </form>
+        </div>
+
+        <aside class="card appointment-info" aria-labelledby="appointment-info-heading">
+            <h2 id="appointment-info-heading">Appointment Information</h2>
+            <ul>
+                <li>Please arrive 15 minutes before your appointment.</li>
+                <li>Bring your identification and relevant medical documents.</li>
+                <li>Appointment availability may vary by doctor.</li>
+                <li>For medical emergencies, contact emergency services instead of using this form.</li>
+            </ul>
+            <p>Bookings are saved for this student project only. CareBridge Hospital is fictional.</p>
+        </aside>
+    </div>
+</section>
+{% endblock %}

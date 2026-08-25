@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Our Medical Specialists | CareBridge Hospital{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow light">CareBridge Hospital</p>
+        <h1>Our Medical Specialists</h1>
+        <p class="tagline">Meet our experienced healthcare professionals dedicated to providing compassionate, patient-centred care.</p>
+        <p class="hero-intro">
+            The doctors on this page are fictional profiles created for a student project.
+            They are not real people and this is not a real hospital.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Medical team</p>
+            <h2>Specialists across key hospital departments</h2>
+            <p>These sample profiles show how a hospital website can introduce its clinical team.</p>
+        </div>
+
+        <div class="doctor-grid">
+            <article class="doctor-card" id="sarah-tan">
+                <p class="doctor-initials" aria-hidden="true">ST</p>
+                <h3>Dr. Sarah Tan</h3>
+                <p class="doctor-role">Cardiology</p>
+                <p>Senior Consultant</p>
+                <p>Supports patients with heart screening, prevention advice and long-term cardiac care planning.</p>
+                <a class="card-link" href="#sarah-tan">View Profile</a>
+            </article>
+
+            <article class="doctor-card" id="michael-lim">
+                <p class="doctor-initials" aria-hidden="true">ML</p>
+                <h3>Dr. Michael Lim</h3>
+                <p class="doctor-role">General Medicine</p>
+                <p>Senior Physician</p>
+                <p>Helps patients manage everyday health concerns and coordinates specialist referrals when needed.</p>
+                <a class="card-link" href="#michael-lim">View Profile</a>
+            </article>
+
+            <article class="doctor-card" id="amanda-lee">
+                <p class="doctor-initials" aria-hidden="true">AL</p>
+                <h3>Dr. Amanda Lee</h3>
+                <p class="doctor-role">Pediatrics</p>
+                <p>Pediatric Specialist</p>
+                <p>Provides child-centred consultations with a calm, family-friendly approach for growing patients.</p>
+                <a class="card-link" href="#amanda-lee">View Profile</a>
+            </article>
+
+            <article class="doctor-card" id="daniel-wong">
+                <p class="doctor-initials" aria-hidden="true">DW</p>
+                <h3>Dr. Daniel Wong</h3>
+                <p class="doctor-role">Orthopedics</p>
+                <p>Orthopedic Specialist</p>
+                <p>Focuses on bone, joint and muscle conditions, including sports injuries and recovery support.</p>
+                <a class="card-link" href="#daniel-wong">View Profile</a>
+            </article>
+
+            <article class="doctor-card" id="emily-koh">
+                <p class="doctor-initials" aria-hidden="true">EK</p>
+                <h3>Dr. Emily Koh</h3>
+                <p class="doctor-role">Emergency Medicine</p>
+                <p>Emergency Care Specialist</p>
+                <p>Assesses urgent illness and injury, helping patients receive timely treatment in emergency settings.</p>
+                <a class="card-link" href="#emily-koh">View Profile</a>
+            </article>
+
+            <article class="doctor-card" id="ryan-chen">
+                <p class="doctor-initials" aria-hidden="true">RC</p>
+                <h3>Dr. Ryan Chen</h3>
+                <p class="doctor-role">Diagnostic Medicine</p>
+                <p>Medical Specialist</p>
+                <p>Works with imaging and laboratory findings to help other doctors confirm a diagnosis and plan care.</p>
+                <a class="card-link" href="#ryan-chen">View Profile</a>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Our approach</p>
+            <h2>Why Choose Our Specialists?</h2>
+            <p>CareBridge is a fictional hospital, but this section shows the values a medical team page can highlight.</p>
+        </div>
+
+        <div class="benefit-grid">
+            <article class="benefit">
+                <h3>Experienced healthcare professionals</h3>
+                <p>Sample specialists cover cardiology, general medicine, pediatrics, orthopedics, emergency and diagnostics.</p>
+            </article>
+            <article class="benefit">
+                <h3>Patient-focused treatment</h3>
+                <p>Each profile is written to emphasise clear explanations and care that puts the patient first.</p>
+            </article>
+            <article class="benefit">
+                <h3>Collaborative medical care</h3>
+                <p>Doctors are presented as a connected team so patients can move between departments when needed.</p>
+            </article>
+            <article class="benefit">
+                <h3>Modern healthcare facilities</h3>
+                <p>The team is shown as working in a contemporary hospital setting designed to feel organised and calm.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container cta-inner">
+        <p class="eyebrow light">Next step</p>
+        <h2>Ready to speak with a doctor?</h2>
+        <p>
+            Choose a specialist area and we will help you find a suitable appointment time.
+            A full appointment page will be added later in this project.
+        </p>
+        <a class="btn btn-light" href="{{ url_for('appointments') }}">Book an Appointment</a>
+    </div>
+</section>
+{% endblock %}

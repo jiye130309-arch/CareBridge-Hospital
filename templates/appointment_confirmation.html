@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Appointment Confirmed | CareBridge Hospital{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow light">Booking received</p>
+        <h1>Appointment confirmed</h1>
+        <p class="tagline">Your demo booking has been saved for the CareBridge student project.</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container confirmation-layout">
+        <div class="card">
+            <p class="success-banner">Reference number: CB-{{ appointment['id'] }}</p>
+            <h2>Booking details</h2>
+            <dl class="confirmation-details">
+                <div>
+                    <dt>Full name</dt>
+                    <dd>{{ appointment['full_name'] }}</dd>
+                </div>
+                <div>
+                    <dt>Email</dt>
+                    <dd>{{ appointment['email'] }}</dd>
+                </div>
+                <div>
+                    <dt>Phone</dt>
+                    <dd>{{ appointment['phone'] }}</dd>
+                </div>
+                <div>
+                    <dt>Date of birth</dt>
+                    <dd>{{ appointment['date_of_birth'] }}</dd>
+                </div>
+                <div>
+                    <dt>Department</dt>
+                    <dd>{{ appointment['department'] }}</dd>
+                </div>
+                <div>
+                    <dt>Doctor</dt>
+                    <dd>{{ appointment['doctor'] }}</dd>
+                </div>
+                <div>
+                    <dt>Preferred date</dt>
+                    <dd>{{ appointment['appointment_date'] }}</dd>
+                </div>
+                <div>
+                    <dt>Preferred time</dt>
+                    <dd>{{ appointment['appointment_time'] }}</dd>
+                </div>
+                <div class="confirmation-full">
+                    <dt>Appointment reason</dt>
+                    <dd>{{ appointment['reason'] }}</dd>
+                </div>
+                {% if appointment['notes'] %}
+                <div class="confirmation-full">
+                    <dt>Additional notes</dt>
+                    <dd>{{ appointment['notes'] }}</dd>
+                </div>
+                {% endif %}
+            </dl>
+            <p class="form-disclaimer">
+                This appointment system is a demonstration created for the CareBridge Hospital student project.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="{{ url_for('appointments') }}">Book another appointment</a>
+                <a class="btn btn-outline" href="{{ url_for('home') }}">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
