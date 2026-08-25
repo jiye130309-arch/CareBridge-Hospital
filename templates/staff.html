@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Appointment Dashboard | CareBridge Hospital{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow light">Staff access</p>
+        <h1>Staff Appointment Dashboard</h1>
+        <p class="tagline">Manage and review patient appointments.</p>
+        <p class="hero-intro">
+            This dashboard shows bookings submitted through the appointment form.
+            It is a student-project demonstration and does not use staff login yet.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="card dashboard-card">
+            <div class="dashboard-header">
+                <div>
+                    <p class="eyebrow">Submitted bookings</p>
+                    <h2>Appointment records</h2>
+                </div>
+                <p class="dashboard-count">{{ appointments|length }} record{% if appointments|length != 1 %}s{% endif %}</p>
+            </div>
+
+            {% if appointments %}
+            <div class="table-wrap">
+                <table class="staff-table">
+                    <thead>
+                        <tr>
+                            <th>Reference</th>
+                            <th>Patient name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Department</th>
+                            <th>Doctor</th>
+                            <th>Appointment date</th>
+                            <th>Appointment time</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in appointments %}
+                        <tr>
+                            <td>CB-{{ appointment['id'] }}</td>
+                            <td>{{ appointment['full_name'] }}</td>
+                            <td>{{ appointment['email'] }}</td>
+                            <td>{{ appointment['phone'] }}</td>
+                            <td>{{ appointment['department'] }}</td>
+                            <td>{{ appointment['doctor'] }}</td>
+                            <td>{{ appointment['appointment_date'] }}</td>
+                            <td>{{ appointment['appointment_time'] }}</td>
+                            <td>{{ appointment['reason'] }}</td>
+                            <td>
+                                <span class="status-badge status-{{ appointment['status']|lower }}">
+                                    {{ appointment['status'] }}
+                                </span>
+                                <form
+                                    class="status-form"
+                                    method="post"
+                                    action="{{ url_for('update_appointment_status', appointment_id=appointment['id']) }}"
+                                >
+                                    <label class="visually-hidden" for="status-{{ appointment['id'] }}">
+                                        Update status for CB-{{ appointment['id'] }}
+                                    </label>
+                                    <select id="status-{{ appointment['id'] }}" name="status">
+                                        {% for status in statuses %}
+                                        <option value="{{ status }}" {% if appointment['status'] == status %}selected{% endif %}>{{ status }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button class="btn btn-primary btn-small" type="submit">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="staff-empty">No appointments have been submitted yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

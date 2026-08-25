@@ -27,10 +27,16 @@ DOCTORS = [
     "Dr. Ryan Chen",
 ]
 
+ALLOWED_STATUSES = [
+    "Pending",
+    "Confirmed",
+    "Cancelled",
+]
+
 
 def get_db_connection():
     """Open the SQLite database used to store appointments."""
-    connection = sqlite3.connect(DATABASE)
+    connection = sqlite3.connect(DATABASE, timeout=10)
     connection.row_factory = sqlite3.Row
     return connection
 
@@ -52,7 +58,8 @@ def create_tables():
             appointment_time TEXT NOT NULL,
             reason TEXT NOT NULL,
             notes TEXT,
-            created_at TEXT NOT NULL
+            created_at TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'Pending'
         )
         """
     )
@@ -60,7 +67,23 @@ def create_tables():
     connection.close()
 
 
+def ensure_status_column():
+    """Add a status column to older databases that do not have one yet."""
+    connection = get_db_connection()
+    columns = [
+        row["name"]
+        for row in connection.execute("PRAGMA table_info(appointments)").fetchall()
+    ]
+    if "status" not in columns:
+        connection.execute(
+            "ALTER TABLE appointments ADD COLUMN status TEXT NOT NULL DEFAULT 'Pending'"
+        )
+        connection.commit()
+    connection.close()
+
+
 create_tables()
+ensure_status_column()
 
 
 @app.route("/")
@@ -126,9 +149,9 @@ def appointments():
             """
             INSERT INTO appointments (
                 full_name, email, phone, date_of_birth, department, doctor,
-                appointment_date, appointment_time, reason, notes, created_at
+                appointment_date, appointment_time, reason, notes, created_at, status
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 full_name,
@@ -142,6 +165,7 @@ def appointments():
                 reason,
                 notes,
                 datetime.now().isoformat(timespec="seconds"),
+                "Pending",
             ),
         )
         connection.commit()
@@ -173,6 +197,62 @@ def appointment_confirmation(appointment_id):
         return redirect(url_for("appointments"))
 
     return render_template("appointment_confirmation.html", appointment=appointment)
+
+
+@app.route("/staff")
+def staff():
+    """Show submitted appointments for hospital staff to review."""
+    connection = get_db_connection()
+    appointments = connection.execute(
+        """
+        SELECT
+            id,
+            full_name,
+            email,
+            phone,
+            department,
+            doctor,
+            appointment_date,
+            appointment_time,
+            reason,
+            status
+        FROM appointments
+        ORDER BY appointment_date DESC, appointment_time DESC, id DESC
+        """
+    ).fetchall()
+    connection.close()
+
+    return render_template(
+        "staff.html",
+        appointments=appointments,
+        statuses=ALLOWED_STATUSES,
+    )
+
+
+@app.route("/staff/appointment/<int:appointment_id>/status", methods=["POST"])
+def update_appointment_status(appointment_id):
+    """Update one appointment status, then return to the staff dashboard."""
+    new_status = request.form.get("status", "").strip()
+    if new_status not in ALLOWED_STATUSES:
+        return redirect(url_for("staff"))
+
+    connection = get_db_connection()
+    appointment = connection.execute(
+        "SELECT id FROM appointments WHERE id = ?",
+        (appointment_id,),
+    ).fetchone()
+
+    if appointment is None:
+        connection.close()
+        return redirect(url_for("staff"))
+
+    connection.execute(
+        "UPDATE appointments SET status = ? WHERE id = ?",
+        (new_status, appointment_id),
+    )
+    connection.commit()
+    connection.close()
+    return redirect(url_for("staff"))
 
 
 if __name__ == "__main__":

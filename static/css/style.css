@@ -551,6 +551,131 @@ p {
     grid-column: 1 / -1;
 }
 
+/* Staff dashboard */
+
+.dashboard-card {
+    overflow: hidden;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+}
+
+.dashboard-header h2 {
+    margin-bottom: 0;
+}
+
+.dashboard-count {
+    margin: 0;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.staff-table th,
+.staff-table td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.85rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.staff-table th {
+    color: var(--navy);
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.staff-table tbody tr:hover {
+    background: #f3f8f8;
+}
+
+.staff-table td:last-child {
+    min-width: 16rem;
+}
+
+.staff-empty {
+    margin: 0;
+    color: var(--muted);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.status-pending {
+    background: #f4ead4;
+    color: #7a5a18;
+}
+
+.status-confirmed {
+    background: #e7f4f3;
+    color: var(--teal-dark);
+}
+
+.status-cancelled {
+    background: #f8e8e8;
+    color: #7a2e2e;
+}
+
+.status-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.55rem;
+}
+
+.status-form select {
+    padding: 0.4rem 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--white);
+    color: var(--text);
+    font: inherit;
+}
+
+.btn-small {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.staff-access {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
 /* Footer */
 
 .site-footer {
@@ -588,6 +713,10 @@ p {
 }
 
 .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
     margin-top: 2rem;
     padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.12);
@@ -651,6 +780,11 @@ p {
     .section,
     .cta {
         padding: 3rem 0;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .hero-grid,
