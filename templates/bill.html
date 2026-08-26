@@ -43,7 +43,7 @@
                         >
                     </div>
                 </div>
-                <button class="btn btn-primary" type="submit">Calculate Bill</button>
+                <button class="btn btn-primary" type="submit">Calculate Bill</button>   #Reviewed the bill submission and staff navigation actions
                 <a class="btn btn-outline" href="{{ url_for('home') }}">Home</a>
             </form>
         </div>
@@ -75,7 +75,7 @@
                 <div>
                     <dt>Discount</dt>
                     <dd>
-                        {% if bill_result.patient_type == "Subsidised" %}
+                        {% if bill_result.patient_type == "Subsidised" %}       #Reviewed the conditional discount display for subsidised patients
                         ${{ "%.2f"|format(bill_result.discount) }} (30%)
                         {% else %}
                         $0.00
