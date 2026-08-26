@@ -21,7 +21,7 @@
             {% if success_message %}
             <p class="form-success" role="status">{{ success_message }}</p>
             {% endif %}
-            {% if registered_patient %}
+            {% if registered_patient %}    #Reviewed the registered patient confirmation details
             <dl class="confirmation-details">
                 <div>
                     <dt>Patient name</dt>
@@ -45,7 +45,7 @@
             </p>
             {% endif %}
 
-            <form action="{{ url_for('register_patient') }}" method="post">
+            <form action="{{ url_for('register_patient') }}" method="post">  #Reviewed the patient registration form and input fields
                 <div class="form-grid">
                     <div class="form-field">
                         <label for="name">Patient name *</label>
@@ -88,7 +88,7 @@
             </form>
         </div>
 
-        <aside class="card">
+        <aside class="card">     #Reviewed the registered patients table and booking links
             <h2>Registered patients</h2>
             {% if patients %}
             <div class="table-wrap">
