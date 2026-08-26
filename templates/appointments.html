@@ -16,7 +16,7 @@
             <h2>Appointment details</h2>
 
             {% if error_message %}
-            <p class="form-error" role="alert">{{ error_message }}</p>     {# Display an error message when the appointment form has invalid information #}
+            <p class="form-error" role="alert">{{ error_message }}</p>     
             {% endif %}         {% if error_message %}
 
             {% if patients %}
@@ -42,7 +42,7 @@
                         <select id="department" name="department" required>
                             <option value="" disabled {% if not form_data.get('department') %}selected{% endif %}>Select a department</option>
                             {% for department in departments %}
-                            <option value="{{ department }}" {% if form_data.get('department') == department %}selected{% endif %}>{{ department }}</option> {# Display the available hospital departments #}
+                            <option value="{{ department }}" {% if form_data.get('department') == department %}selected{% endif %}>{{ department }}</option> 
                             {% endfor %}                                                                                                                      {% for department in departments %}
                         </select>
                     </div>
@@ -91,7 +91,7 @@
                 <a class="btn btn-outline" href="{{ url_for('home') }}">Home</a>
             </form>
             {% else %}
-            <p>Register a patient first, then book an appointment.</p>               {# Ask the staff to register a patient before booking an appointment #}
+            <p>Register a patient first, then book an appointment.</p>              
             <a class="btn btn-primary" href="{{ url_for('register_patient') }}">Register Patient</a>      {% else %}
             {% endif %}
         </div>
