@@ -32,9 +32,11 @@
             <nav class="main-nav" aria-label="Main">
                 <ul class="nav-links" id="nav-links">
                     <li><a href="{{ url_for('home') }}">Home</a></li>
-                    <li><a href="{{ url_for('services') }}">Services</a></li>
-                    <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
-                    <li><a href="{{ url_for('appointments') }}">Appointments</a></li>
+                    <li><a href="{{ url_for('register_patient') }}">Register Patient</a></li>
+                    <li><a href="{{ url_for('appointments') }}">Book Appointment</a></li>
+                    <li><a href="{{ url_for('calculate_bill') }}">Calculate Bill</a></li>
+                    <li><a href="{{ url_for('assign_triage') }}">Triage</a></li>
+                    <li><a href="{{ url_for('staff') }}">Staff</a></li>
                 </ul>
             </nav>
         </div>
@@ -48,29 +50,31 @@
         <div class="container footer-grid">
             <div>
                 <h2>CareBridge Hospital</h2>
-                <p>A fictional hospital created for a Programming 1 student project. This is not a real medical facility.</p>
+                <p>Hospital Management System for staff.</p>
             </div>
 
             <div>
-                <h3>Visit us</h3>
-                <p>18 Wellness Drive<br>Harbourview, SG 018920</p>
-                <p>Phone: (65) 6123 4500<br>Email: hello@carebridge.example</p>
+                <h3>Staff tools</h3>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('register_patient') }}">Register Patient</a></li>
+                    <li><a href="{{ url_for('appointments') }}">Book Appointment</a></li>
+                    <li><a href="{{ url_for('calculate_bill') }}">Calculate Bill</a></li>
+                    <li><a href="{{ url_for('assign_triage') }}">Triage</a></li>
+                </ul>
             </div>
 
             <div>
-                <h3>Explore</h3>
+                <h3>Access</h3>
                 <ul class="footer-links">
                     <li><a href="{{ url_for('home') }}">Home</a></li>
-                    <li><a href="{{ url_for('services') }}">Services</a></li>
-                    <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
-                    <li><a href="{{ url_for('appointments') }}">Appointments</a></li>
+                    <li><a href="{{ url_for('staff') }}">Staff Access</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="container footer-bottom">
-            <p>&copy; <span id="current-year">2026</span> CareBridge Hospital. Student project only.</p>
-            <a class="staff-access" href="{{ url_for('staff') }}">Staff</a>
+            <p>&copy; <span id="current-year">2026</span> CareBridge Hospital</p>
+            <a class="staff-access" href="{{ url_for('staff') }}">Staff Access</a>
         </div>
     </footer>
 

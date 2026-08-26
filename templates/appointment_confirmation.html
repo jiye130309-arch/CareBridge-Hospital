@@ -6,7 +6,7 @@
 <section class="page-hero">
     <div class="container">
         <h1>Appointment confirmed</h1>
-        <p class="tagline">Your booking has been saved.</p>
+        <p class="tagline">The booking has been saved.</p>
     </div>
 </section>
 
@@ -17,54 +17,31 @@
             <h2>Booking details</h2>
             <dl class="confirmation-details">
                 <div>
-                    <dt>Full name</dt>
+                    <dt>Patient</dt>
                     <dd>{{ appointment['full_name'] }}</dd>
                 </div>
+                {% if appointment['patient_code'] %}
                 <div>
-                    <dt>Email</dt>
-                    <dd>{{ appointment['email'] }}</dd>
+                    <dt>Patient ID</dt>
+                    <dd>{{ appointment['patient_code'] }}</dd>
                 </div>
-                <div>
-                    <dt>Phone</dt>
-                    <dd>{{ appointment['phone'] }}</dd>
-                </div>
-                <div>
-                    <dt>Date of birth</dt>
-                    <dd>{{ appointment['date_of_birth'] }}</dd>
-                </div>
+                {% endif %}
                 <div>
                     <dt>Department</dt>
                     <dd>{{ appointment['department'] }}</dd>
                 </div>
                 <div>
-                    <dt>Doctor</dt>
-                    <dd>{{ appointment['doctor'] }}</dd>
-                </div>
-                <div>
-                    <dt>Preferred date</dt>
+                    <dt>Appointment date</dt>
                     <dd>{{ appointment['appointment_date'] }}</dd>
                 </div>
                 <div>
-                    <dt>Preferred time</dt>
-                    <dd>{{ appointment['appointment_time'] }}</dd>
+                    <dt>Status</dt>
+                    <dd>{{ appointment['status'] }}</dd>
                 </div>
-                <div class="confirmation-full">
-                    <dt>Appointment reason</dt>
-                    <dd>{{ appointment['reason'] }}</dd>
-                </div>
-                {% if appointment['notes'] %}
-                <div class="confirmation-full">
-                    <dt>Additional notes</dt>
-                    <dd>{{ appointment['notes'] }}</dd>
-                </div>
-                {% endif %}
             </dl>
-            <p class="form-disclaimer">
-                This appointment system is a demonstration created for the CareBridge Hospital student project.
-            </p>
             <div class="hero-actions">
                 <a class="btn btn-primary" href="{{ url_for('appointments') }}">Book another appointment</a>
-                <a class="btn btn-outline" href="{{ url_for('home') }}">Back to Home</a>
+                <a class="btn btn-outline" href="{{ url_for('staff') }}">Staff Access</a>
             </div>
         </div>
     </div>

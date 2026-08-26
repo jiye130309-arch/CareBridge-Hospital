@@ -6,119 +6,13 @@
 <section class="hero">
     <div class="container hero-grid">
         <div class="hero-copy">
-            <h1>Care that connects people to better health.</h1>
-            <p class="tagline">Compassionate Care. Advanced Medicine. Better Outcomes.</p>
+            <h1>CareBridge Hospital</h1>
+            <p class="tagline">Hospital Management System</p>
+            <p>Simple and efficient tools for hospital staff.</p>
             <div class="hero-actions">
-                <a class="btn btn-primary" href="{{ url_for('appointments') }}">Book an Appointment</a>
-                <a class="btn btn-secondary" href="{{ url_for('services') }}">Explore Services</a>
+                <a class="btn btn-primary" href="{{ url_for('staff') }}">Staff Access</a>
+                <a class="btn btn-secondary" href="{{ url_for('register_patient') }}">Register Patient</a>
             </div>
-        </div>
-
-        <aside class="hero-panel" aria-label="Hospital highlights">
-            <h2>A calmer path through hospital care</h2>
-            <ul class="hero-stats">
-                <li>
-                    <strong>6</strong>
-                    <span>core medical services</span>
-                </li>
-                <li>
-                    <strong>3</strong>
-                    <span>featured specialists</span>
-                </li>
-                <li>
-                    <strong>24/7</strong>
-                    <span>emergency coverage</span>
-                </li>
-            </ul>
-        </aside>
-    </div>
-</section>
-
-<section class="intro" id="about">
-    <div class="container intro-grid">
-        <div>
-            <p class="eyebrow">About CareBridge</p>
-            <h2>Hospital care designed around the patient journey.</h2>
-        </div>
-        <div>
-            <p>
-                CareBridge Hospital brings emergency care, specialist clinics,
-                diagnostics and pharmacy services together in one clear digital
-                home. The goal of this website is to make it easy to understand
-                what the hospital offers and how to book a visit.
-            </p>
-            <p>
-                This homepage is the first step of the web migration. Later
-                modules will add more pages, data storage and deployment.
-            </p>
-        </div>
-    </div>
-</section>
-
-<section class="section" id="services">
-    <div class="container">
-        <div class="section-header">
-            <p class="eyebrow">Medical services</p>
-            <h2>Specialist care across key departments</h2>
-            <p>Each card below represents a service patients can explore on a full hospital website.</p>
-        </div>
-
-        <div class="card-grid">
-            <article class="card">
-                <h3>Emergency Care</h3>
-                <p>Urgent assessment and treatment for sudden illness and injury, available around the clock.</p>
-            </article>
-            <article class="card">
-                <h3>Cardiology</h3>
-                <p>Heart health screening, diagnosis and ongoing specialist support for cardiac conditions.</p>
-            </article>
-            <article class="card">
-                <h3>General Medicine</h3>
-                <p>First-line medical care for common conditions, health checks and chronic disease follow-up.</p>
-            </article>
-            <article class="card">
-                <h3>Pediatrics</h3>
-                <p>Gentle, family-focused care for infants, children and teenagers at every stage of growth.</p>
-            </article>
-            <article class="card">
-                <h3>Diagnostic Services</h3>
-                <p>Imaging and laboratory tests that help doctors confirm a diagnosis and plan treatment.</p>
-            </article>
-            <article class="card">
-                <h3>Pharmacy</h3>
-                <p>Prescription medicines, counselling and convenient collection after a clinic visit.</p>
-            </article>
-        </div>
-    </div>
-</section>
-
-<section class="section section-alt" id="doctors">
-    <div class="container">
-        <div class="section-header">
-            <p class="eyebrow">Featured doctors</p>
-            <h2>Meet some of our fictional specialists</h2>
-            <p>These doctors are sample profiles created for the student project.</p>
-        </div>
-
-        <div class="doctor-grid">
-            <article class="doctor-card">
-                <p class="doctor-initials" aria-hidden="true">ST</p>
-                <h3>Dr. Sarah Tan</h3>
-                <p class="doctor-role">Cardiology Specialist</p>
-                <p>Supports patients with heart screening, prevention advice and long-term cardiac care.</p>
-            </article>
-            <article class="doctor-card">
-                <p class="doctor-initials" aria-hidden="true">ML</p>
-                <h3>Dr. Michael Lim</h3>
-                <p class="doctor-role">General Medicine</p>
-                <p>Helps patients manage everyday health concerns and coordinate specialist referrals.</p>
-            </article>
-            <article class="doctor-card">
-                <p class="doctor-initials" aria-hidden="true">AL</p>
-                <h3>Dr. Amanda Lee</h3>
-                <p class="doctor-role">Pediatric Specialist</p>
-                <p>Provides child-centred consultations with a calm, family-friendly approach.</p>
-            </article>
         </div>
     </div>
 </section>
@@ -126,40 +20,31 @@
 <section class="section">
     <div class="container">
         <div class="section-header">
-            <p class="eyebrow">Why choose CareBridge</p>
-            <h2>Built for trust, clarity and convenience</h2>
+            <h2>Staff tools</h2>
         </div>
 
-        <div class="benefit-grid">
-            <article class="benefit">
-                <h3>Experienced medical professionals</h3>
-                <p>Sample specialist teams cover emergency, heart, general and children’s health.</p>
+            <div class="card-grid function-grid">
+            <article class="card">
+                <h3>Register Patient</h3>
+                <p>Add a patient name, age and Patient ID.</p>
+                <a class="card-link" href="{{ url_for('register_patient') }}">Open</a>
             </article>
-            <article class="benefit">
-                <h3>Patient-centred care</h3>
-                <p>Clear language, simple navigation and a focus on what patients need next.</p>
+            <article class="card">
+                <h3>Book Appointment</h3>
+                <p>Select a patient, choose GP or Specialist, and set a date.</p>
+                <a class="card-link" href="{{ url_for('appointments') }}">Open</a>
             </article>
-            <article class="benefit">
-                <h3>Modern facilities</h3>
-                <p>A contemporary hospital setting designed to feel calm, organised and welcoming.</p>
+            <article class="card">
+                <h3>Calculate Bill</h3>
+                <p>Work out a subsidised or private bill with laboratory tests.</p>
+                <a class="card-link" href="{{ url_for('calculate_bill') }}">Open</a>
             </article>
-            <article class="benefit">
-                <h3>Convenient appointments</h3>
-                <p>A single call-to-action helps visitors start the booking process quickly.</p>
+            <article class="card">
+                <h3>Assign Triage Room</h3>
+                <p>Enter severity from 1 to 10 and assign a room.</p>
+                <a class="card-link" href="{{ url_for('assign_triage') }}">Open</a>
             </article>
         </div>
-    </div>
-</section>
-
-<section class="cta" id="appointments">
-    <div class="container cta-inner">
-        <p class="eyebrow light">Ready when you are</p>
-        <h2>Book an appointment with CareBridge Hospital</h2>
-        <p>
-            Tell us what you need and our team will help you find the right clinic.
-            Appointment booking will be expanded in a later part of this project.
-        </p>
-        <a class="btn btn-light" href="{{ url_for('appointments') }}">Book an Appointment</a>
     </div>
 </section>
 {% endblock %}

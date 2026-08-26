@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
         dateOfBirth.max = today;
     }
 
-    if (appointmentDate) {
+    if (appointmentDate && !appointmentDate.getAttribute("min")) {
         appointmentDate.min = today;
     }
 

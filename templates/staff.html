@@ -1,21 +1,47 @@
 {% extends "base.html" %}
 
-{% block title %}Staff Appointment Dashboard | CareBridge Hospital{% endblock %}
+{% block title %}Staff Access | CareBridge Hospital{% endblock %}
 
 {% block content %}
 <section class="page-hero">
     <div class="container">
-        <h1>Staff Appointment Dashboard</h1>
-        <p class="tagline">Manage and review patient appointments.</p>
+        <h1>Staff Access</h1>
+        <p class="tagline">Manage patients, appointments, bills and triage.</p>
     </div>
 </section>
 
 <section class="section">
     <div class="container">
+        <div class="card-grid function-grid">
+            <article class="card">
+                <h3>Register Patient</h3>
+                <p>Add a new patient record.</p>
+                <a class="card-link" href="{{ url_for('register_patient') }}">Open</a>
+            </article>
+            <article class="card">
+                <h3>Book Appointment</h3>
+                <p>Book GP or Specialist appointments.</p>
+                <a class="card-link" href="{{ url_for('appointments') }}">Open</a>
+            </article>
+            <article class="card">
+                <h3>Calculate Bill</h3>
+                <p>Calculate subsidised or private bills.</p>
+                <a class="card-link" href="{{ url_for('calculate_bill') }}">Open</a>
+            </article>
+            <article class="card">
+                <h3>Assign Triage Room</h3>
+                <p>Assign a room from severity 1 to 10.</p>
+                <a class="card-link" href="{{ url_for('assign_triage') }}">Open</a>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt">
+    <div class="container">
         <div class="card dashboard-card">
             <div class="dashboard-header">
                 <div>
-                    <p class="eyebrow">Submitted bookings</p>
                     <h2>Appointment records</h2>
                 </div>
                 <p class="dashboard-count">{{ appointments|length }} record{% if appointments|length != 1 %}s{% endif %}</p>
@@ -28,13 +54,9 @@
                         <tr>
                             <th>Reference</th>
                             <th>Patient name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
+                            <th>Patient ID</th>
                             <th>Department</th>
-                            <th>Doctor</th>
                             <th>Appointment date</th>
-                            <th>Appointment time</th>
-                            <th>Reason</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -43,13 +65,9 @@
                         <tr>
                             <td>CB-{{ appointment['id'] }}</td>
                             <td>{{ appointment['full_name'] }}</td>
-                            <td>{{ appointment['email'] }}</td>
-                            <td>{{ appointment['phone'] }}</td>
+                            <td>{{ appointment['patient_code'] or "—" }}</td>
                             <td>{{ appointment['department'] }}</td>
-                            <td>{{ appointment['doctor'] }}</td>
                             <td>{{ appointment['appointment_date'] }}</td>
-                            <td>{{ appointment['appointment_time'] }}</td>
-                            <td>{{ appointment['reason'] }}</td>
                             <td>
                                 <span class="status-badge status-{{ appointment['status']|lower }}">
                                     {{ appointment['status'] }}

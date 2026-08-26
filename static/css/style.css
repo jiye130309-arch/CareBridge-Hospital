@@ -339,6 +339,10 @@ p {
     grid-template-columns: repeat(3, 1fr);
 }
 
+.function-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
 .card,
 .doctor-card,
 .benefit {
@@ -497,6 +501,14 @@ p {
     background: #f8e8e8;
     border: 1px solid #e3b6b6;
     color: #7a2e2e;
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+}
+
+.form-success {
+    background: #e7f4f3;
+    border: 1px solid #b7d0d2;
+    color: var(--teal-dark);
     border-radius: 12px;
     padding: 0.8rem 1rem;
 }
@@ -729,6 +741,7 @@ p {
     .hero-grid,
     .intro-grid,
     .card-grid,
+    .function-grid,
     .services-grid,
     .doctor-grid,
     .benefit-grid,
@@ -790,6 +803,7 @@ p {
     .hero-grid,
     .intro-grid,
     .card-grid,
+    .function-grid,
     .services-grid,
     .doctor-grid,
     .benefit-grid,
