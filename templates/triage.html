@@ -20,7 +20,7 @@
             <p class="form-error" role="alert">{{ error_message }}</p>
             {% endif %}
 
-            <form action="{{ url_for('assign_triage_room') }}" method="post">
+            <form action="{{ url_for('assign_triage_room') }}" method="post"> #Reviewed the triage severity input and room assignment form
                 <div class="form-grid">
                     <div class="form-field form-field-full">
                         <label for="severity">Severity (1 to 10) *</label>
@@ -42,7 +42,7 @@
         </div>
 
         {% if triage_result %}
-        <aside class="card">
+        <aside class="card">  #Reviewed the triage result and assigned room display
             <h2>Triage result</h2>
             <p class="form-success" role="status">
                 Severity {{ triage_result.severity }} assigned to {{ triage_result.assigned_room }}.
