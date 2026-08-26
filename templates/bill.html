@@ -6,12 +6,12 @@
 <section class="page-hero">  #Reviewed the bill calculation page header and fee information
     <div class="container">
         <h1>Calculate Bill</h1>
-        <p class="tagline">Consultation fee $100. Each laboratory test $10. Subsidised patients pay 70%.</p> #Reviewed the consultation, laboratory, and subsidy fee information
+        <p class="tagline">Consultation fee $100. Each laboratory test $10. Subsidised patients pay 70%.</p> 
     </div>
 </section>
 
 <section class="section">
-    <div class="container appointment-layout">    #Reviewed the billing details form section
+    <div class="container appointment-layout">    
         <div class="card appointment-form-card">
             <h2>Billing details</h2>
 
@@ -19,7 +19,7 @@
             <p class="form-error" role="alert">{{ error_message }}</p>
             {% endif %}
 
-            <form action="{{ url_for('calculate_bill') }}" method="post"> #Reviewed the patient type and laboratory test input fields
+            <form action="{{ url_for('calculate_bill') }}" method="post"> 
                 <div class="form-grid"> 
                     <div class="form-field">
                         <label for="patient_type">Patient type *</label>
@@ -43,7 +43,7 @@
                         >
                     </div>
                 </div>
-                <button class="btn btn-primary" type="submit">Calculate Bill</button>   #Reviewed the bill submission and staff navigation actions
+                <button class="btn btn-primary" type="submit">Calculate Bill</button>   
                 <a class="btn btn-outline" href="{{ url_for('home') }}">Home</a>
             </form>
         </div>
@@ -75,7 +75,7 @@
                 <div>
                     <dt>Discount</dt>
                     <dd>
-                        {% if bill_result.patient_type == "Subsidised" %}       #Reviewed the conditional discount display for subsidised patients
+                        {% if bill_result.patient_type == "Subsidised" %}      
                         ${{ "%.2f"|format(bill_result.discount) }} (30%)
                         {% else %}
                         $0.00
