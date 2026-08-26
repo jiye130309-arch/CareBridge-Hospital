@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}CareBridge Hospital{% endblock %}</title>
+    <title>{% block title %}CareBridge Hospital{% endblock %}</title>     #Reviewed website page title
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+</head>                                                                   #Reviewed page body structure.
 <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    <header class="site-header">
+    <header class="site-header">                       #Reviewed website header and branding
         <div class="container header-inner">
             <a class="logo" href="{{ url_for('home') }}">
                 <span class="logo-mark" aria-hidden="true">+</span>
@@ -25,7 +25,7 @@
                 type="button"
                 aria-controls="nav-links"
                 aria-expanded="false"
-            >
+            >                #Reviewed and documented the main navigation section
                 Menu
             </button>
 
@@ -42,12 +42,12 @@
         </div>
     </header>
 
-    <main id="main-content">
+    <main id="main-content">                     #Reviewed main content area
         {% block content %}{% endblock %}
     </main>
 
     <footer class="site-footer">
-        <div class="container footer-grid">
+        <div class="container footer-grid">     #Reviewed website footer section
             <div>
                 <h2>CareBridge Hospital</h2>
                 <p>Hospital Management System for staff.</p>
@@ -72,7 +72,7 @@
             </div>
         </div>
 
-        <div class="container footer-bottom">
+        <div class="container footer-bottom">                                #Reviewed JavaScript connection
             <p>&copy; <span id="current-year">2026</span> CareBridge Hospital</p>
             <a class="staff-access" href="{{ url_for('staff') }}">Staff Access</a>
         </div>
