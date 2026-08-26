@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    image: carebridge-hospital
+    container_name: carebridge-hospital-container
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./carebridge.db:/app/carebridge.db
