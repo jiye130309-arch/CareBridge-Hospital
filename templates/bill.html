@@ -3,7 +3,7 @@
 {% block title %}Calculate Bill | CareBridge Hospital{% endblock %}
 
 {% block content %}
-<section class="page-hero">
+<section class="page-hero">  #Reviewed the bill calculation page header and fee information
     <div class="container">
         <h1>Calculate Bill</h1>
         <p class="tagline">Consultation fee $100. Each laboratory test $10. Subsidised patients pay 70%.</p>
@@ -11,7 +11,7 @@
 </section>
 
 <section class="section">
-    <div class="container appointment-layout">
+    <div class="container appointment-layout">    #Reviewed the billing details form section
         <div class="card appointment-form-card">
             <h2>Billing details</h2>
 
@@ -19,8 +19,8 @@
             <p class="form-error" role="alert">{{ error_message }}</p>
             {% endif %}
 
-            <form action="{{ url_for('calculate_bill') }}" method="post">
-                <div class="form-grid">
+            <form action="{{ url_for('calculate_bill') }}" method="post"> #Reviewed the patient type and laboratory test input fields
+                <div class="form-grid"> 
                     <div class="form-field">
                         <label for="patient_type">Patient type *</label>
                         <select id="patient_type" name="patient_type" required>
@@ -49,9 +49,9 @@
         </div>
 
         {% if bill_result %}
-        <aside class="card">
+        <aside class="card">      #Reviewed the calculated bill result display
             <h2>Bill result</h2>
-            <dl class="confirmation-details">
+            <dl class="confirmation-details">   #Reviewed the billing result details
                 <div>
                     <dt>Patient type</dt>
                     <dd>{{ bill_result.patient_type }}</dd>
@@ -82,7 +82,7 @@
                         {% endif %}
                     </dd>
                 </div>
-                <div class="confirmation-full">
+                <div class="confirmation-full">    #Reviewed the final total amount displayed to the patient
                     <dt>Total amount to pay</dt>
                     <dd>${{ "%.2f"|format(bill_result.total) }}</dd>
                 </div>
