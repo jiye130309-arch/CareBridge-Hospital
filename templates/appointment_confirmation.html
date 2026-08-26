@@ -10,15 +10,15 @@
     </div>
 </section>
 
-<section class="section">  {# Display the unique reference number for this appointment #}
+<section class="section">
     <div class="container confirmation-layout">
         <div class="card">
-            <p class="success-banner">Reference number: CB-{{ appointment['id'] }}</p>        {# Display the appointment confirmation and reference number #}
+            <p class="success-banner">Reference number: CB-{{ appointment['id'] }}</p>
             <h2>Booking details</h2>
             <dl class="confirmation-details">
                 <div>
                     <dt>Patient name</dt>
-                    <dd>{{ appointment['full_name'] }}</dd>      {# Only display the Patient ID if one is available #}
+                    <dd>{{ appointment['full_name'] }}</dd>
                 </div>
                 {% if appointment['patient_code'] %}
                 <div>
@@ -36,11 +36,11 @@
                 </div>
                 <div>
                     <dt>Status</dt>
-                    <dd>{{ appointment['status'] }}</dd>   {# Provide buttons to return to the staff menu or book another appointment #}
+                    <dd>{{ appointment['status'] }}</dd>
                 </div>
             </dl>
-            <div class="hero-actions">    {# Provide navigation options after appointment confirmation #}
-                <a class="btn btn-primary" href="{{ url_for('staff') }}">Staff Menu</a>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="{{ url_for('home') }}">Home</a>
                 <a class="btn btn-outline" href="{{ url_for('book_appointment') }}">Book another appointment</a>
             </div>
         </div>

@@ -9,7 +9,8 @@ DATABASE = "carebridge.db"
 
 STAFF_DEPARTMENTS = ["GP", "Specialist"]
 PATIENT_TYPES = ["Subsidised", "Private"]
-ALLOWED_STATUSES = ["Pending", "Confirmed", "Cancelled"]
+
+FIRST_AVAILABLE_OFFSET_DAYS = 8
 
 BASE_CONSULTATION_FEE = 100
 LAB_TEST_RATE = 10
@@ -35,18 +36,12 @@ def create_tables():
         """
         CREATE TABLE IF NOT EXISTS appointments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            patient_code TEXT,
             full_name TEXT NOT NULL,
-            email TEXT NOT NULL,
-            phone TEXT NOT NULL,
-            date_of_birth TEXT NOT NULL,
             department TEXT NOT NULL,
-            doctor TEXT NOT NULL,
             appointment_date TEXT NOT NULL,
-            appointment_time TEXT NOT NULL,
-            reason TEXT NOT NULL,
-            notes TEXT,
-            created_at TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'Pending'
+            status TEXT NOT NULL DEFAULT 'Pending',
+            created_at TEXT NOT NULL
         )
         """
     )
@@ -88,22 +83,108 @@ def create_tables():
     connection.close()
 
 
-def ensure_extra_columns():
-    """Add new columns to older databases without replacing existing tables."""
+def migrate_appointments_table():
+    """Rebuild appointments to the current booking columns, keeping existing rows."""
     connection = get_db_connection()
-    appointment_columns = get_column_names(connection, "appointments")
-    if "status" not in appointment_columns:
-        connection.execute(
-            "ALTER TABLE appointments ADD COLUMN status TEXT NOT NULL DEFAULT 'Pending'"
+
+    tables = [
+        row[0]
+        for row in connection.execute(
+            "SELECT name FROM sqlite_master WHERE type = 'table'"
+        ).fetchall()
+    ]
+
+    if "appointments" not in tables:
+        connection.close()
+        return
+
+    current_columns = set(get_column_names(connection, "appointments"))
+
+    wanted_columns = {
+        "id",
+        "patient_code",
+        "full_name",
+        "email",
+        "phone",
+        "department",
+        "doctor",
+        "appointment_date",
+        "appointment_time",
+        "reason",
+        "status",
+        "created_at",
+    }
+
+    if current_columns == wanted_columns:
+        connection.close()
+        return
+
+    connection.execute("DROP TABLE IF EXISTS appointments_new")
+
+    connection.execute(
+        """
+        CREATE TABLE appointments_new (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            patient_code TEXT,
+            full_name TEXT NOT NULL,
+            email TEXT,
+            phone TEXT,
+            department TEXT NOT NULL,
+            doctor TEXT,
+            appointment_date TEXT NOT NULL,
+            appointment_time TEXT,
+            reason TEXT,
+            status TEXT NOT NULL DEFAULT 'Pending',
+            created_at TEXT NOT NULL
         )
-    if "patient_code" not in appointment_columns:
-        connection.execute("ALTER TABLE appointments ADD COLUMN patient_code TEXT")
+        """
+    )
+
+    def existing_column(column, default):
+        return column if column in current_columns else default
+
+    connection.execute(
+        f"""
+        INSERT INTO appointments_new (
+            id,
+            patient_code,
+            full_name,
+            email,
+            phone,
+            department,
+            doctor,
+            appointment_date,
+            appointment_time,
+            reason,
+            status,
+            created_at
+        )
+        SELECT
+            id,
+            {existing_column("patient_code", "NULL")},
+            full_name,
+            {existing_column("email", "NULL")},
+            {existing_column("phone", "NULL")},
+            department,
+            {existing_column("doctor", "NULL")},
+            appointment_date,
+            {existing_column("appointment_time", "NULL")},
+            {existing_column("reason", "NULL")},
+            {existing_column("status", "'Pending'")},
+            created_at
+        FROM appointments
+        """
+    )
+
+    connection.execute("DROP TABLE appointments")
+    connection.execute("ALTER TABLE appointments_new RENAME TO appointments")
+
     connection.commit()
     connection.close()
 
 
 create_tables()
-ensure_extra_columns()
+migrate_appointments_table()
 
 
 def now_text():
@@ -120,6 +201,11 @@ def first_error(checks):
 
 def today_date():
     return date.today()
+
+
+def first_available_appointment_date():
+    """First bookable date: 8 days from today. Recalculated from the current date."""
+    return today_date() + timedelta(days=FIRST_AVAILABLE_OFFSET_DAYS)
 
 
 def get_patients():
@@ -227,8 +313,6 @@ def register_patient():
 def book_appointment():
     """Book an appointment for a registered patient."""
     error_message = None
-    current_date = date.today()
-    minimum_date = current_date + timedelta(days=7)
     patients = get_patients()
 
     if request.method == "POST":
@@ -236,6 +320,7 @@ def book_appointment():
         appointment_date_text = request.form.get("appointment_date", "").strip()
         patient_code = request.form.get("patient_code", "").strip()
         patient_name = ""
+        first_available_date = first_available_appointment_date()
 
         connection = get_db_connection()
         patient = connection.execute(
@@ -260,10 +345,10 @@ def book_appointment():
                     connection.close()
                     error_message = "Please enter a valid appointment date in YYYY-MM-DD format."
                 else:
-                    if appointment_date <= minimum_date:
+                    if appointment_date < first_available_date:
                         connection.close()
                         error_message = (
-                            "The appointment date must be more than 7 days after the current date."
+                            "The appointment date must be at least 8 days from today."
                         )
 
         if error_message:
@@ -278,26 +363,17 @@ def book_appointment():
         cursor = connection.execute(
             """
             INSERT INTO appointments (
-                full_name, email, phone, date_of_birth, department, doctor,
-                appointment_date, appointment_time, reason, notes, created_at,
-                status, patient_code
+                patient_code, full_name, department, appointment_date, status, created_at
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
             """,
             (
+                patient_code,
                 patient_name,
-                "N/A",
-                "N/A",
-                "N/A",
-                department,
                 department,
                 appointment_date_text,
-                "09:00",
-                "Staff booking",
-                "",
-                now_text(),
                 "Pending",
-                patient_code,
+                now_text(),
             ),
         )
         connection.commit()
@@ -438,60 +514,9 @@ def assign_triage_room():
 
 
 @app.route("/staff")
-def staff():
-    """Show the staff dashboard and saved appointments."""
-    connection = get_db_connection()
-    appointments = connection.execute(
-        """
-        SELECT
-            id,
-            full_name,
-            email,
-            phone,
-            department,
-            doctor,
-            appointment_date,
-            appointment_time,
-            reason,
-            status,
-            patient_code
-        FROM appointments
-        ORDER BY appointment_date DESC, appointment_time DESC, id DESC
-        """
-    ).fetchall()
-    connection.close()
-
-    return render_template(
-        "staff.html",
-        appointments=appointments,
-        statuses=ALLOWED_STATUSES,
-    )
-
-
-@app.route("/staff/appointment/<int:appointment_id>/status", methods=["POST"])
-def update_appointment_status(appointment_id):
-    """Update one appointment status, then return to the staff dashboard."""
-    new_status = request.form.get("status", "").strip()
-    if new_status not in ALLOWED_STATUSES:
-        return redirect(url_for("staff"))
-
-    connection = get_db_connection()
-    appointment = connection.execute(
-        "SELECT id FROM appointments WHERE id = ?",
-        (appointment_id,),
-    ).fetchone()
-
-    if appointment is None:
-        connection.close()
-        return redirect(url_for("staff"))
-
-    connection.execute(
-        "UPDATE appointments SET status = ? WHERE id = ?",
-        (new_status, appointment_id),
-    )
-    connection.commit()
-    connection.close()
-    return redirect(url_for("staff"))
+def staff_redirect():
+    """Old staff menu link. Send visitors to Home."""
+    return redirect(url_for("home"))
 
 
 if __name__ == "__main__":

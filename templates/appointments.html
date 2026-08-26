@@ -6,7 +6,7 @@
 <section class="page-hero">
     <div class="container">
         <h1>Book Appointment</h1>
-        <p class="tagline">Select a registered patient, then choose GP or Specialist. The date must be more than 7 days after today.</p>
+        <p class="tagline">Select a registered patient, then choose GP or Specialist. The date must be at least 8 days from today.</p>
     </div>
 </section>
 
@@ -47,19 +47,48 @@
                         </select>
                     </div>
 
-                    <div class="form-field">
+                    <div class="form-field date-picker-field form-field-full">
                         <label for="appointment-date">Preferred appointment date *</label>
                         <input
-                            type="date"
+                            type="text"
                             id="appointment-date"
                             name="appointment_date"
                             required
+                            readonly
+                            autocomplete="off"
+                            placeholder="YYYY-MM-DD"
                             value="{{ form_data.get('appointment_date', '') }}"
+                            aria-haspopup="dialog"
+                            aria-expanded="false"
+                            aria-controls="appointment-calendar"
                         >
+                        <div
+                            class="date-picker-calendar"
+                            id="appointment-calendar"
+                            hidden
+                            role="dialog"
+                            aria-label="Choose appointment date"
+                        >
+                            <div class="date-picker-header">
+                                <button class="date-picker-nav" type="button" id="date-picker-prev" aria-label="Previous month">&lt;</button>
+                                <p class="date-picker-month" id="date-picker-month"></p>
+                                <button class="date-picker-nav" type="button" id="date-picker-next" aria-label="Next month">&gt;</button>
+                            </div>
+                            <div class="date-picker-weekdays">
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                                <span>Sat</span>
+                                <span>Sun</span>
+                            </div>
+                            <div class="date-picker-days" id="date-picker-days"></div>
+                        </div>
                     </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Book Appointment</button>
-                <a class="btn btn-outline" href="{{ url_for('staff') }}">Staff Menu</a>
+                <a class="btn btn-outline" href="{{ url_for('home') }}">Home</a>
             </form>
             {% else %}
             <p>Register a patient first, then book an appointment.</p>               {# Ask the staff to register a patient before booking an appointment #}

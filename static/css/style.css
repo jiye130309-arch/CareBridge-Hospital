@@ -484,6 +484,122 @@ p {
     border-color: var(--teal);
 }
 
+.date-picker-field {
+    position: relative;
+    z-index: 5;
+    overflow: visible;
+}
+
+.appointment-form-card {
+    overflow: visible;
+}
+
+.date-picker-field input {
+    cursor: pointer;
+}
+
+.date-picker-field input.date-unavailable {
+    color: #9CA3AF;
+}
+
+.date-picker-field input.date-available {
+    color: var(--text);
+}
+
+.date-picker-calendar {
+    position: absolute;
+    z-index: 30;
+    top: calc(100% + 0.35rem);
+    left: 0;
+    width: min(100%, 320px);
+    padding: 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--white);
+    box-shadow: var(--shadow);
+}
+
+.date-picker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.7rem;
+}
+
+.date-picker-month {
+    margin: 0;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.date-picker-nav {
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--navy);
+    cursor: pointer;
+}
+
+.date-picker-nav:hover,
+.date-picker-nav:focus {
+    border-color: var(--teal);
+    color: var(--teal-dark);
+}
+
+.date-picker-weekdays,
+.date-picker-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.date-picker-weekdays span {
+    padding: 0.2rem 0 0.45rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.date-picker-day {
+    min-height: 2rem;
+    padding: 0.2rem 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    font: inherit;
+    cursor: pointer;
+}
+
+.date-picker-day.is-other-month {
+    opacity: 0.7;
+}
+
+.date-picker-day.is-unavailable,
+.date-picker-day:disabled {
+    color: #9CA3AF;
+    opacity: 0.72;
+    cursor: not-allowed;
+}
+
+.date-picker-day.is-available {
+    color: var(--text);
+}
+
+.date-picker-day.is-selected {
+    background: #e7f4f3;
+    font-weight: 700;
+}
+
+.date-picker-day.is-available:hover,
+.date-picker-day.is-available:focus {
+    background: #e7f4f3;
+    color: var(--text);
+}
+
 .form-disclaimer {
     color: var(--muted);
     font-size: 0.95rem;
@@ -703,7 +819,7 @@ p {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-template-columns: 1.4fr 1fr;
     gap: 2rem;
 }
 
