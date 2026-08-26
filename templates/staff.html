@@ -14,24 +14,29 @@
     <div class="container">
         <div class="card-grid function-grid">
             <article class="card">
-                <h3>Register Patient</h3>
+                <h3>1. Register Patient</h3>
                 <p>Add a new patient record.</p>
                 <a class="card-link" href="{{ url_for('register_patient') }}">Open</a>
             </article>
             <article class="card">
-                <h3>Book Appointment</h3>
-                <p>Book GP or Specialist appointments.</p>
-                <a class="card-link" href="{{ url_for('appointments') }}">Open</a>
+                <h3>2. Book Appointment</h3>
+                <p>Book GP or Specialist within 7 days.</p>
+                <a class="card-link" href="{{ url_for('book_appointment') }}">Open</a>
             </article>
             <article class="card">
-                <h3>Calculate Bill</h3>
+                <h3>3. Calculate Bill</h3>
                 <p>Calculate subsidised or private bills.</p>
                 <a class="card-link" href="{{ url_for('calculate_bill') }}">Open</a>
             </article>
             <article class="card">
-                <h3>Assign Triage Room</h3>
+                <h3>4. Assign Triage Room</h3>
                 <p>Assign a room from severity 1 to 10.</p>
-                <a class="card-link" href="{{ url_for('assign_triage') }}">Open</a>
+                <a class="card-link" href="{{ url_for('assign_triage_room') }}">Open</a>
+            </article>
+            <article class="card">
+                <h3>5. Exit</h3>
+                <p>Return to the home page.</p>
+                <a class="card-link" href="{{ url_for('home') }}">Exit</a>
             </article>
         </div>
     </div>

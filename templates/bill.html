@@ -44,6 +44,7 @@
                     </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Calculate Bill</button>
+                <a class="btn btn-outline" href="{{ url_for('staff') }}">Staff Menu</a>
             </form>
         </div>
 
@@ -56,8 +57,16 @@
                     <dd>{{ bill_result.patient_type }}</dd>
                 </div>
                 <div>
-                    <dt>Laboratory tests</dt>
+                    <dt>Base consultation fee</dt>
+                    <dd>${{ "%.2f"|format(bill_result.base_fee) }}</dd>
+                </div>
+                <div>
+                    <dt>Number of lab tests</dt>
                     <dd>{{ bill_result.lab_tests }}</dd>
+                </div>
+                <div>
+                    <dt>Lab test cost</dt>
+                    <dd>${{ "%.2f"|format(bill_result.lab_test_cost) }}</dd>
                 </div>
                 <div>
                     <dt>Subtotal</dt>
@@ -74,7 +83,7 @@
                     </dd>
                 </div>
                 <div class="confirmation-full">
-                    <dt>Final total</dt>
+                    <dt>Total amount to pay</dt>
                     <dd>${{ "%.2f"|format(bill_result.total) }}</dd>
                 </div>
             </dl>

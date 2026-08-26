@@ -6,7 +6,7 @@
 <section class="page-hero">
     <div class="container">
         <h1>Book Appointment</h1>
-        <p class="tagline">Select a patient, department and a date more than 7 days from today.</p>
+        <p class="tagline">Select a registered patient, then choose GP or Specialist. The date must be more than 7 days after today.</p>
     </div>
 </section>
 
@@ -20,18 +20,18 @@
             {% endif %}
 
             {% if patients %}
-            <form action="{{ url_for('appointments') }}" method="post">
+            <form action="{{ url_for('book_appointment') }}" method="post">
                 <div class="form-grid">
                     <div class="form-field">
-                        <label for="patient_code">Patient *</label>
+                        <label for="patient_code">Patient name *</label>
                         <select id="patient_code" name="patient_code" required>
-                            <option value="" disabled {% if not form_data.get('patient_code') %}selected{% endif %}>Select a patient</option>
+                            <option value="" disabled {% if not form_data.get('patient_code') %}selected{% endif %}>Select a registered patient</option>
                             {% for patient in patients %}
                             <option
                                 value="{{ patient['patient_code'] }}"
                                 {% if form_data.get('patient_code') == patient['patient_code'] %}selected{% endif %}
                             >
-                                {{ patient['patient_code'] }} — {{ patient['name'] }}
+                                {{ patient['name'] }} ({{ patient['patient_code'] }})
                             </option>
                             {% endfor %}
                         </select>
@@ -47,22 +47,22 @@
                         </select>
                     </div>
 
-                    <div class="form-field form-field-full">
-                        <label for="appointment-date">Appointment date *</label>
+                    <div class="form-field">
+                        <label for="appointment-date">Preferred appointment date *</label>
                         <input
                             type="date"
                             id="appointment-date"
                             name="appointment_date"
                             required
-                            min="{{ min_date }}"
                             value="{{ form_data.get('appointment_date', '') }}"
                         >
                     </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Book Appointment</button>
+                <a class="btn btn-outline" href="{{ url_for('staff') }}">Staff Menu</a>
             </form>
             {% else %}
-            <p>Register a patient first before booking an appointment.</p>
+            <p>Register a patient first, then book an appointment.</p>
             <a class="btn btn-primary" href="{{ url_for('register_patient') }}">Register Patient</a>
             {% endif %}
         </div>

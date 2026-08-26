@@ -20,7 +20,7 @@
             <p class="form-error" role="alert">{{ error_message }}</p>
             {% endif %}
 
-            <form action="{{ url_for('assign_triage') }}" method="post">
+            <form action="{{ url_for('assign_triage_room') }}" method="post">
                 <div class="form-grid">
                     <div class="form-field form-field-full">
                         <label for="severity">Severity (1 to 10) *</label>
@@ -37,6 +37,7 @@
                     </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Assign Room</button>
+                <a class="btn btn-outline" href="{{ url_for('staff') }}">Staff Menu</a>
             </form>
         </div>
 

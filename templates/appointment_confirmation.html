@@ -17,7 +17,7 @@
             <h2>Booking details</h2>
             <dl class="confirmation-details">
                 <div>
-                    <dt>Patient</dt>
+                    <dt>Patient name</dt>
                     <dd>{{ appointment['full_name'] }}</dd>
                 </div>
                 {% if appointment['patient_code'] %}
@@ -40,8 +40,8 @@
                 </div>
             </dl>
             <div class="hero-actions">
-                <a class="btn btn-primary" href="{{ url_for('appointments') }}">Book another appointment</a>
-                <a class="btn btn-outline" href="{{ url_for('staff') }}">Staff Access</a>
+                <a class="btn btn-primary" href="{{ url_for('staff') }}">Staff Menu</a>
+                <a class="btn btn-outline" href="{{ url_for('book_appointment') }}">Book another appointment</a>
             </div>
         </div>
     </div>

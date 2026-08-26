@@ -8,15 +8,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const dateOfBirth = document.getElementById("date-of-birth");
-    const appointmentDate = document.getElementById("appointment-date");
-    const today = new Date().toISOString().split("T")[0];
 
-    if (dateOfBirth) {
-        dateOfBirth.max = today;
+    function toLocalYMD(value) {
+        const year = value.getFullYear();
+        const month = String(value.getMonth() + 1).padStart(2, "0");
+        const day = String(value.getDate()).padStart(2, "0");
+        return year + "-" + month + "-" + day;
     }
 
-    if (appointmentDate && !appointmentDate.getAttribute("min")) {
-        appointmentDate.min = today;
+    const todayLocal = toLocalYMD(new Date());
+
+    if (dateOfBirth) {
+        dateOfBirth.max = todayLocal;
     }
 
     if (!menuButton || !navLinks) {

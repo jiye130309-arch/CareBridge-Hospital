@@ -13,7 +13,7 @@ ALLOWED_STATUSES = ["Pending", "Confirmed", "Cancelled"]
 
 BASE_CONSULTATION_FEE = 100
 LAB_TEST_RATE = 10
-SUBSIDY_RATE = 0.70
+SUBSIDISED_DISCOUNT = 0.30
 
 
 def get_db_connection():
@@ -110,21 +110,28 @@ def now_text():
     return datetime.now().isoformat(timespec="seconds")
 
 
-def min_appointment_date():
-    """Appointments must be more than 7 days from today."""
-    return date.today() + timedelta(days=8)
+def first_error(checks):
+    """Return the first error message. The form is shown again until input is valid."""
+    for is_valid, message in checks:
+        if not is_valid:
+            return message
+    return None
+
+
+def today_date():
+    return date.today()
 
 
 def get_patients():
     connection = get_db_connection()
     patients = connection.execute(
-        "SELECT id, patient_code, name, age FROM patients ORDER BY name"
+        "SELECT patient_code, name, age FROM patients ORDER BY name"
     ).fetchall()
     connection.close()
     return patients
 
 
-def assign_triage_room(severity):
+def get_assigned_room(severity):
     if 1 <= severity <= 4:
         return "Waiting Room"
     if 5 <= severity <= 7:
@@ -153,6 +160,7 @@ def register_patient():
     """Register a patient and save the record in SQLite."""
     error_message = None
     success_message = None
+    registered_patient = None
     form_data = {}
 
     if request.method == "POST":
@@ -161,13 +169,18 @@ def register_patient():
         patient_code = request.form.get("patient_code", "").strip()
         form_data = request.form
 
-        if name == "":
-            error_message = "Patient name cannot be blank."
-        elif patient_code == "":
-            error_message = "Patient ID cannot be blank."
-        elif not age_text.isdigit() or int(age_text) <= 0:
-            error_message = "Age must be a positive whole number."
-        else:
+        error_message = first_error(
+            [
+                (name != "", "Patient name cannot be blank."),
+                (patient_code != "", "Patient ID cannot be blank."),
+                (
+                    age_text.isdigit() and int(age_text) > 0,
+                    "Age must be a positive whole number.",
+                ),
+            ]
+        )
+
+        if error_message is None:
             connection = get_db_connection()
             existing = connection.execute(
                 "SELECT id FROM patients WHERE patient_code = ?",
@@ -186,7 +199,12 @@ def register_patient():
                 )
                 connection.commit()
                 connection.close()
-                success_message = f"Patient {name} ({patient_code}) has been registered."
+                success_message = "Patient registered successfully."
+                registered_patient = {
+                    "name": name,
+                    "age": int(age_text),
+                    "patient_code": patient_code,
+                }
                 form_data = {}
 
     connection = get_db_connection()
@@ -199,35 +217,54 @@ def register_patient():
         "register_patient.html",
         error_message=error_message,
         success_message=success_message,
+        registered_patient=registered_patient,
         form_data=form_data,
         patients=patients,
     )
 
 
 @app.route("/appointments", methods=["GET", "POST"])
-def appointments():
+def book_appointment():
     """Book an appointment for a registered patient."""
     error_message = None
+    current_date = date.today()
+    minimum_date = current_date + timedelta(days=7)
     patients = get_patients()
-    earliest_date = min_appointment_date()
 
     if request.method == "POST":
-        patient_code = request.form.get("patient_code", "").strip()
         department = request.form.get("department", "").strip()
         appointment_date_text = request.form.get("appointment_date", "").strip()
+        patient_code = request.form.get("patient_code", "").strip()
+        patient_name = ""
 
-        if patient_code == "":
-            error_message = "Please select a patient."
-        elif department not in STAFF_DEPARTMENTS:
-            error_message = "Department must be GP or Specialist."
+        connection = get_db_connection()
+        patient = connection.execute(
+            "SELECT patient_code, name FROM patients WHERE patient_code = ?",
+            (patient_code,),
+        ).fetchone()
+
+        if patient is None:
+            connection.close()
+            error_message = "Please select a registered patient."
         else:
-            try:
-                chosen_date = datetime.strptime(appointment_date_text, "%Y-%m-%d").date()
-            except ValueError:
-                error_message = "Please enter a valid appointment date."
+            patient_name = patient["name"]
+            if department not in STAFF_DEPARTMENTS:
+                connection.close()
+                error_message = "Department must be GP or Specialist."
             else:
-                if chosen_date <= date.today() + timedelta(days=7):
-                    error_message = "Appointment date must be more than 7 days from today."
+                try:
+                    appointment_date = datetime.strptime(
+                        appointment_date_text, "%Y-%m-%d"
+                    ).date()
+                except ValueError:
+                    connection.close()
+                    error_message = "Please enter a valid appointment date in YYYY-MM-DD format."
+                else:
+                    if appointment_date <= minimum_date:
+                        connection.close()
+                        error_message = (
+                            "The appointment date must be more than 7 days after the current date."
+                        )
 
         if error_message:
             return render_template(
@@ -236,24 +273,6 @@ def appointments():
                 patients=patients,
                 form_data=request.form,
                 error_message=error_message,
-                min_date=earliest_date.isoformat(),
-            )
-
-        connection = get_db_connection()
-        patient = connection.execute(
-            "SELECT patient_code, name FROM patients WHERE patient_code = ?",
-            (patient_code,),
-        ).fetchone()
-        if patient is None:
-            connection.close()
-            error_message = "Please select a valid registered patient."
-            return render_template(
-                "appointments.html",
-                departments=STAFF_DEPARTMENTS,
-                patients=patients,
-                form_data=request.form,
-                error_message=error_message,
-                min_date=earliest_date.isoformat(),
             )
 
         cursor = connection.execute(
@@ -266,7 +285,7 @@ def appointments():
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
-                patient["name"],
+                patient_name,
                 "N/A",
                 "N/A",
                 "N/A",
@@ -278,7 +297,7 @@ def appointments():
                 "",
                 now_text(),
                 "Pending",
-                patient["patient_code"],
+                patient_code,
             ),
         )
         connection.commit()
@@ -286,13 +305,15 @@ def appointments():
         connection.close()
         return redirect(url_for("appointment_confirmation", appointment_id=appointment_id))
 
+    selected_code = request.args.get("patient_code", "").strip()
+    form_data = {"patient_code": selected_code} if selected_code else {}
+
     return render_template(
         "appointments.html",
         departments=STAFF_DEPARTMENTS,
         patients=patients,
-        form_data={},
+        form_data=form_data,
         error_message=None,
-        min_date=earliest_date.isoformat(),
     )
 
 
@@ -307,7 +328,7 @@ def appointment_confirmation(appointment_id):
     connection.close()
 
     if appointment is None:
-        return redirect(url_for("appointments"))
+        return redirect(url_for("book_appointment"))
 
     return render_template("appointment_confirmation.html", appointment=appointment)
 
@@ -330,12 +351,13 @@ def calculate_bill():
             error_message = "Number of laboratory tests must be a whole number."
         else:
             lab_tests = int(lab_tests_text)
-            subtotal = BASE_CONSULTATION_FEE + (lab_tests * LAB_TEST_RATE)
+            lab_test_cost = lab_tests * LAB_TEST_RATE
+            subtotal = BASE_CONSULTATION_FEE + lab_test_cost
             discount = 0
             total = subtotal
             if patient_type == "Subsidised":
-                total = subtotal * SUBSIDY_RATE
-                discount = subtotal - total
+                discount = subtotal * SUBSIDISED_DISCOUNT
+                total = subtotal * (1 - SUBSIDISED_DISCOUNT)
 
             connection = get_db_connection()
             connection.execute(
@@ -353,6 +375,8 @@ def calculate_bill():
             bill_result = {
                 "patient_type": patient_type,
                 "lab_tests": lab_tests,
+                "base_fee": BASE_CONSULTATION_FEE,
+                "lab_test_cost": lab_test_cost,
                 "subtotal": subtotal,
                 "discount": discount,
                 "total": total,
@@ -371,7 +395,7 @@ def calculate_bill():
 
 
 @app.route("/triage", methods=["GET", "POST"])
-def assign_triage():
+def assign_triage_room():
     """Assign a triage room from a severity score of 1 to 10."""
     error_message = None
     triage_result = None
@@ -388,7 +412,7 @@ def assign_triage():
             if severity < 1 or severity > 10:
                 error_message = "Severity must be a whole number between 1 and 10."
             else:
-                assigned_room = assign_triage_room(severity)
+                assigned_room = get_assigned_room(severity)
                 connection = get_db_connection()
                 connection.execute(
                     """

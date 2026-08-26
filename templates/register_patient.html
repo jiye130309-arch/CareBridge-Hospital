@@ -21,6 +21,29 @@
             {% if success_message %}
             <p class="form-success" role="status">{{ success_message }}</p>
             {% endif %}
+            {% if registered_patient %}
+            <dl class="confirmation-details">
+                <div>
+                    <dt>Patient name</dt>
+                    <dd>
+                        <a class="card-link" href="{{ url_for('book_appointment', patient_code=registered_patient.patient_code) }}">
+                            {{ registered_patient.name }}
+                        </a>
+                    </dd>
+                </div>
+                <div>
+                    <dt>Patient age</dt>
+                    <dd>{{ registered_patient.age }}</dd>
+                </div>
+                <div>
+                    <dt>Patient ID</dt>
+                    <dd>{{ registered_patient.patient_code }}</dd>
+                </div>
+            </dl>
+            <p>
+                <a class="btn btn-primary" href="{{ url_for('book_appointment', patient_code=registered_patient.patient_code) }}">Book appointment for this patient</a>
+            </p>
+            {% endif %}
 
             <form action="{{ url_for('register_patient') }}" method="post">
                 <div class="form-grid">
@@ -61,6 +84,7 @@
                     </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Register Patient</button>
+                <a class="btn btn-outline" href="{{ url_for('staff') }}">Staff Menu</a>
             </form>
         </div>
 
@@ -74,14 +98,22 @@
                             <th>Patient ID</th>
                             <th>Name</th>
                             <th>Age</th>
+                            <th>Book</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for patient in patients %}
                         <tr>
                             <td>{{ patient['patient_code'] }}</td>
-                            <td>{{ patient['name'] }}</td>
+                            <td>
+                                <a class="card-link" href="{{ url_for('book_appointment', patient_code=patient['patient_code']) }}">
+                                    {{ patient['name'] }}
+                                </a>
+                            </td>
                             <td>{{ patient['age'] }}</td>
+                            <td>
+                                <a class="card-link" href="{{ url_for('book_appointment', patient_code=patient['patient_code']) }}">Book</a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
