@@ -13,7 +13,7 @@
 <section class="section">  {# Display the unique reference number for this appointment #}
     <div class="container confirmation-layout">
         <div class="card">
-            <p class="success-banner">Reference number: CB-{{ appointment['id'] }}</p>
+            <p class="success-banner">Reference number: CB-{{ appointment['id'] }}</p>        {# Display the appointment confirmation and reference number #}
             <h2>Booking details</h2>
             <dl class="confirmation-details">
                 <div>
@@ -39,7 +39,7 @@
                     <dd>{{ appointment['status'] }}</dd>   {# Provide buttons to return to the staff menu or book another appointment #}
                 </div>
             </dl>
-            <div class="hero-actions">
+            <div class="hero-actions">    {# Provide navigation options after appointment confirmation #}
                 <a class="btn btn-primary" href="{{ url_for('staff') }}">Staff Menu</a>
                 <a class="btn btn-outline" href="{{ url_for('book_appointment') }}">Book another appointment</a>
             </div>
