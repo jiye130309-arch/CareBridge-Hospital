@@ -16,8 +16,8 @@
             <h2>Appointment details</h2>
 
             {% if error_message %}
-            <p class="form-error" role="alert">{{ error_message }}</p>     
-            {% endif %}         {% if error_message %}
+            <p class="form-error" role="alert">{{ error_message }}</p>
+            {% endif %}
 
             {% if patients %}
             <form action="{{ url_for('book_appointment') }}" method="post">
@@ -28,8 +28,8 @@
                             <option value="" disabled {% if not form_data.get('patient_code') %}selected{% endif %}>Select a registered patient</option>
                             {% for patient in patients %}
                             <option
-                                value="{{ patient['patient_code'] }}"                                                     {# Display all registered patients as selectable options #}  
-                                {% if form_data.get('patient_code') == patient['patient_code'] %}selected{% endif %}      {% for patient in patients %}
+                                value="{{ patient['patient_code'] }}"
+                                {% if form_data.get('patient_code') == patient['patient_code'] %}selected{% endif %}
                             >
                                 {{ patient['name'] }} ({{ patient['patient_code'] }})
                             </option>
@@ -42,8 +42,8 @@
                         <select id="department" name="department" required>
                             <option value="" disabled {% if not form_data.get('department') %}selected{% endif %}>Select a department</option>
                             {% for department in departments %}
-                            <option value="{{ department }}" {% if form_data.get('department') == department %}selected{% endif %}>{{ department }}</option> 
-                            {% endfor %}                                                                                                                      {% for department in departments %}
+                            <option value="{{ department }}" {% if form_data.get('department') == department %}selected{% endif %}>{{ department }}</option>
+                            {% endfor %}
                         </select>
                     </div>
 
@@ -91,8 +91,8 @@
                 <a class="btn btn-outline" href="{{ url_for('home') }}">Home</a>
             </form>
             {% else %}
-            <p>Register a patient first, then book an appointment.</p>              
-            <a class="btn btn-primary" href="{{ url_for('register_patient') }}">Register Patient</a>      {% else %}
+            <p>Register a patient first, then book an appointment.</p>
+            <a class="btn btn-primary" href="{{ url_for('register_patient') }}">Register Patient</a>
             {% endif %}
         </div>
     </div>

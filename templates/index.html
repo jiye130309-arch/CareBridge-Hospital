@@ -3,7 +3,7 @@
 {% block title %}CareBridge Hospital | Home{% endblock %}
 
 {% block content %}
-<section class="hero">   #Reviewed the home page hero section and staff access links
+<section class="hero">
     <div class="container hero-grid">
         <div class="hero-copy">
             <h1>CareBridge Hospital</h1>
@@ -23,18 +23,18 @@
             <h2>Staff tools</h2>
         </div>
 
-            <div class="card-grid function-grid">  #Reviewed the staff tools section and hospital management function cards
-            <article class="card">   #Reviewed the patient registration tool card
+            <div class="card-grid function-grid">
+            <article class="card">
                 <h3>Register Patient</h3>
                 <p>Add a patient name, age and Patient ID.</p>
                 <a class="card-link" href="{{ url_for('register_patient') }}">Open</a>
             </article>
             <article class="card">
                 <h3>Book Appointment</h3>
-                <p>Choose GP or Specialist and a date within 7 days.</p>
+                <p>Choose GP or Specialist. The date must be at least 8 days from today.</p>
                 <a class="card-link" href="{{ url_for('book_appointment') }}">Open</a>
             </article>
-            <article class="card">  #Reviewed the triage room assignment tool card
+            <article class="card">
                 <h3>Calculate Bill</h3>
                 <p>Work out a subsidised or private bill with laboratory tests.</p>
                 <a class="card-link" href="{{ url_for('calculate_bill') }}">Open</a>

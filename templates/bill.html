@@ -3,15 +3,15 @@
 {% block title %}Calculate Bill | CareBridge Hospital{% endblock %}
 
 {% block content %}
-<section class="page-hero">  #Reviewed the bill calculation page header and fee information
+<section class="page-hero">
     <div class="container">
         <h1>Calculate Bill</h1>
-        <p class="tagline">Consultation fee $100. Each laboratory test $10. Subsidised patients pay 70%.</p> 
+        <p class="tagline">Consultation fee $100. Each laboratory test $10. Subsidised patients pay 70%.</p>
     </div>
 </section>
 
 <section class="section">
-    <div class="container appointment-layout">    
+    <div class="container appointment-layout">
         <div class="card appointment-form-card">
             <h2>Billing details</h2>
 
@@ -19,7 +19,7 @@
             <p class="form-error" role="alert">{{ error_message }}</p>
             {% endif %}
 
-            <form action="{{ url_for('calculate_bill') }}" method="post"> 
+            <form action="{{ url_for('calculate_bill') }}" method="post">
                 <div class="form-grid"> 
                     <div class="form-field">
                         <label for="patient_type">Patient type *</label>
@@ -43,15 +43,15 @@
                         >
                     </div>
                 </div>
-                <button class="btn btn-primary" type="submit">Calculate Bill</button>   
+                <button class="btn btn-primary" type="submit">Calculate Bill</button>
                 <a class="btn btn-outline" href="{{ url_for('home') }}">Home</a>
             </form>
         </div>
 
         {% if bill_result %}
-        <aside class="card">      
+        <aside class="card">
             <h2>Bill result</h2>
-            <dl class="confirmation-details">   
+            <dl class="confirmation-details">
                 <div>
                     <dt>Patient type</dt>
                     <dd>{{ bill_result.patient_type }}</dd>
@@ -75,14 +75,14 @@
                 <div>
                     <dt>Discount</dt>
                     <dd>
-                        {% if bill_result.patient_type == "Subsidised" %}      
+                        {% if bill_result.patient_type == "Subsidised" %}
                         ${{ "%.2f"|format(bill_result.discount) }} (30%)
                         {% else %}
                         $0.00
                         {% endif %}
                     </dd>
                 </div>
-                <div class="confirmation-full">   
+                <div class="confirmation-full">
                     <dt>Total amount to pay</dt>
                     <dd>${{ "%.2f"|format(bill_result.total) }}</dd>
                 </div>

@@ -104,13 +104,8 @@ def migrate_appointments_table():
         "id",
         "patient_code",
         "full_name",
-        "email",
-        "phone",
         "department",
-        "doctor",
         "appointment_date",
-        "appointment_time",
-        "reason",
         "status",
         "created_at",
     }
@@ -127,13 +122,8 @@ def migrate_appointments_table():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             patient_code TEXT,
             full_name TEXT NOT NULL,
-            email TEXT,
-            phone TEXT,
             department TEXT NOT NULL,
-            doctor TEXT,
             appointment_date TEXT NOT NULL,
-            appointment_time TEXT,
-            reason TEXT,
             status TEXT NOT NULL DEFAULT 'Pending',
             created_at TEXT NOT NULL
         )
@@ -146,30 +136,14 @@ def migrate_appointments_table():
     connection.execute(
         f"""
         INSERT INTO appointments_new (
-            id,
-            patient_code,
-            full_name,
-            email,
-            phone,
-            department,
-            doctor,
-            appointment_date,
-            appointment_time,
-            reason,
-            status,
-            created_at
+            id, patient_code, full_name, department, appointment_date, status, created_at
         )
         SELECT
             id,
             {existing_column("patient_code", "NULL")},
             full_name,
-            {existing_column("email", "NULL")},
-            {existing_column("phone", "NULL")},
             department,
-            {existing_column("doctor", "NULL")},
             appointment_date,
-            {existing_column("appointment_time", "NULL")},
-            {existing_column("reason", "NULL")},
             {existing_column("status", "'Pending'")},
             created_at
         FROM appointments
