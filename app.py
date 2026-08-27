@@ -294,6 +294,7 @@ def book_appointment():
         appointment_date_text = request.form.get("appointment_date", "").strip()
         patient_code = request.form.get("patient_code", "").strip()
         patient_name = ""
+         # Calculate the earliest available appointment date
         first_available_date = first_available_appointment_date()
 
         connection = get_db_connection()
