@@ -320,6 +320,7 @@ def book_appointment():
                         appointment_date_text, "%Y-%m-%d"
                     ).date()
                 except ValueError:
+                    # Display an error if the date format is invalid
                     connection.close()
                     error_message = "Please enter a valid appointment date in YYYY-MM-DD format."
                 else:
