@@ -1,4 +1,5 @@
 from datetime import date, datetime, timedelta
+import re
 import sqlite3
 #import flask
 from flask import Flask, redirect, render_template, request, url_for
@@ -173,6 +174,29 @@ def first_error(checks):
     return None
 
 
+def is_real_patient_name(name):
+    """A patient name must use letters, not numbers."""
+    if name == "":
+        return False
+    letter_count = 0
+    for character in name:
+        if character.isdigit():
+            return False
+        if character.isalpha():
+            letter_count += 1
+        elif character not in " .'-":
+            return False
+    return letter_count >= 2
+
+
+def is_valid_patient_id(patient_code):
+    """Patient ID must be P001 onwards, for example P001, P002, P015."""
+    match = re.fullmatch(r"P(\d{3,})", patient_code)
+    if match is None:
+        return False
+    return int(match.group(1)) >= 1
+
+
 def today_date():
     return date.today()
 
@@ -226,13 +250,18 @@ def register_patient():
     if request.method == "POST":
         name = request.form.get("name", "").strip()
         age_text = request.form.get("age", "").strip()
-        patient_code = request.form.get("patient_code", "").strip()
+        patient_code = request.form.get("patient_code", "").strip().upper()
         form_data = request.form
 
         error_message = first_error(
             [
                 (name != "", "Patient name cannot be blank."),
+                (is_real_patient_name(name), "Patient name must be a real name. Numbers are not allowed."),
                 (patient_code != "", "Patient ID cannot be blank."),
+                (
+                    is_valid_patient_id(patient_code),
+                    "Patient ID must be in the format P001 onwards.",
+                ),
                 (
                     age_text.isdigit() and int(age_text) > 0,
                     "Age must be a positive whole number.",
@@ -243,29 +272,33 @@ def register_patient():
         if error_message is None:
             connection = get_db_connection()
             existing = connection.execute(
-                "SELECT id FROM patients WHERE patient_code = ?",
+                "SELECT id FROM patients WHERE upper(patient_code) = ?",
                 (patient_code,),
             ).fetchone()
             if existing:
                 connection.close()
-                error_message = "This Patient ID is already registered."
+                error_message = "This Patient ID is already registered and cannot be used again."
             else:
-                connection.execute(
-                    """
-                    INSERT INTO patients (patient_code, name, age, created_at)
-                    VALUES (?, ?, ?, ?)
-                    """,
-                    (patient_code, name, int(age_text), now_text()),
-                )
-                connection.commit()
-                connection.close()
-                success_message = "Patient registered successfully."
-                registered_patient = {
-                    "name": name,
-                    "age": int(age_text),
-                    "patient_code": patient_code,
-                }
-                form_data = {}
+                try:
+                    connection.execute(
+                        """
+                        INSERT INTO patients (patient_code, name, age, created_at)
+                        VALUES (?, ?, ?, ?)
+                        """,
+                        (patient_code, name, int(age_text), now_text()),
+                    )
+                    connection.commit()
+                    connection.close()
+                    success_message = "Patient registered successfully."
+                    registered_patient = {
+                        "name": name,
+                        "age": int(age_text),
+                        "patient_code": patient_code,
+                    }
+                    form_data = {}
+                except sqlite3.IntegrityError:
+                    connection.close()
+                    error_message = "This Patient ID is already registered and cannot be used again."
 
     connection = get_db_connection()
     patients = connection.execute(

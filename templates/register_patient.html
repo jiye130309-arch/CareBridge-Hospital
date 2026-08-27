@@ -6,7 +6,7 @@
 <section class="page-hero">
     <div class="container">
         <h1>Register Patient</h1>
-        <p class="tagline">Enter the patient name, age and Patient ID.</p>
+        <p class="tagline">Enter a real patient name, age and a Patient ID such as P001.</p>
     </div>
 </section>
 
@@ -55,6 +55,8 @@
                             name="name"
                             required
                             maxlength="100"
+                            pattern="[^0-9]*"
+                            title="Enter a real name. Numbers are not allowed."
                             value="{{ form_data.get('name', '') }}"
                         >
                     </div>
@@ -77,8 +79,10 @@
                             id="patient_code"
                             name="patient_code"
                             required
-                            maxlength="40"
+                            maxlength="10"
                             placeholder="P001"
+                            pattern="[Pp][0-9]{3,}"
+                            title="Use P001, P002, P003 onwards."
                             value="{{ form_data.get('patient_code', '') }}"
                         >
                     </div>
