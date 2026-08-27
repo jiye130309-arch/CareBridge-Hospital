@@ -214,7 +214,7 @@ def services():
 def doctors():
     return render_template("doctors.html")
 
-
+# Get all registered patients
 @app.route("/register", methods=["GET", "POST"])
 def register_patient():
     """Register a patient and save the record in SQLite."""
