@@ -339,7 +339,7 @@ def book_appointment():
                 form_data=request.form,
                 error_message=error_message,
             )
-
+        # Save the valid appointment into the database
         cursor = connection.execute(
             """
             INSERT INTO appointments (
