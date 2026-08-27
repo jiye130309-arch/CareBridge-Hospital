@@ -207,12 +207,32 @@ def first_available_appointment_date():
 
 
 def get_patients():
+    remove_patients_with_completed_appointments()
     connection = get_db_connection()
     patients = connection.execute(
         "SELECT patient_code, name, age FROM patients ORDER BY name"
     ).fetchall()
     connection.close()
     return patients
+
+
+def remove_patients_with_completed_appointments():
+    """If an appointment status is Completed in SQLite, remove that patient from the site."""
+    connection = get_db_connection()
+    connection.execute(
+        """
+        DELETE FROM patients
+        WHERE upper(patient_code) IN (
+            SELECT upper(patient_code)
+            FROM appointments
+            WHERE upper(trim(status)) = 'COMPLETED'
+              AND patient_code IS NOT NULL
+              AND trim(patient_code) != ''
+        )
+        """
+    )
+    connection.commit()
+    connection.close()
 
 
 def get_assigned_room(severity):
@@ -300,6 +320,7 @@ def register_patient():
                     connection.close()
                     error_message = "This Patient ID is already registered and cannot be used again."
 
+    remove_patients_with_completed_appointments()
     connection = get_db_connection()
     patients = connection.execute(
         "SELECT patient_code, name, age FROM patients ORDER BY id DESC"
