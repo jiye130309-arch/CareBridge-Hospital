@@ -15,8 +15,6 @@ A modern web-based hospital system developed using Python Flask.
 ## How to run the website
 
 1. Open a terminal in the project folder.
-2. Activate the virtual environment:
-   - Windows: `venv\Scripts\activate`
-3. Install packages: `pip install -r requirements.txt`
-4. Start the app: `python app.py`
-5. Open http://127.0.0.1:5000 in a web browser.
+2. Install packages: `pip install -r requirements.txt`
+3. Start the app: `python app.py`
+4. Open http://127.0.0.1:5000 in a web browser.
