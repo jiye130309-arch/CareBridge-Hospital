@@ -309,6 +309,7 @@ def book_appointment():
             error_message = "Please select a registered patient."
         else:
             patient_name = patient["name"]
+             # Validate the department
             if department not in STAFF_DEPARTMENTS:
                 connection.close()
                 error_message = "Department must be GP or Specialist."
