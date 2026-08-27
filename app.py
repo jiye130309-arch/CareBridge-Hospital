@@ -324,6 +324,7 @@ def book_appointment():
                     connection.close()
                     error_message = "Please enter a valid appointment date in YYYY-MM-DD format."
                 else:
+                    # Check that the appointment is at least 8 days from today
                     if appointment_date < first_available_date:
                         connection.close()
                         error_message = (
