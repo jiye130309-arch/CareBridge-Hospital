@@ -356,6 +356,7 @@ def book_appointment():
                 now_text(),
             ),
         )
+        # Commit the appointment and get its ID
         connection.commit()
         appointment_id = cursor.lastrowid
         connection.close()
