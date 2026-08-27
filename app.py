@@ -315,6 +315,7 @@ def book_appointment():
                 error_message = "Department must be GP or Specialist."
             else:
                 try:
+                    # Convert the entered date into a valid date
                     appointment_date = datetime.strptime(
                         appointment_date_text, "%Y-%m-%d"
                     ).date()
