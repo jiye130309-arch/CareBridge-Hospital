@@ -7,16 +7,16 @@ from flask import Flask, redirect, render_template, request, url_for
 app = Flask(__name__)
 
 DATABASE = "carebridge.db"
-
+# Staff departments available for appointment booking
 STAFF_DEPARTMENTS = ["GP", "Specialist"]
 PATIENT_TYPES = ["Subsidised", "Private"]
-
+# Patient billing categories
 FIRST_AVAILABLE_OFFSET_DAYS = 8
-
+# Minimum advance booking period (days)
 BASE_CONSULTATION_FEE = 100
 LAB_TEST_RATE = 10
 SUBSIDISED_DISCOUNT = 0.30
-
+# Billing rates and discounts
 
 def get_db_connection():
     """Open the SQLite database used by CareBridge."""
@@ -82,8 +82,8 @@ def create_tables():
     )
     connection.commit()
     connection.close()
-
-
+# Rebuild appointments table if column structure has changed
+# Preserves existing patient data while updating schema
 def migrate_appointments_table():
     """Rebuild appointments to the current booking columns, keeping existing rows."""
     connection = get_db_connection()
@@ -157,7 +157,7 @@ def migrate_appointments_table():
     connection.commit()
     connection.close()
 
-
+# Automatically removes patients whose appointments are marked 'Completed'
 create_tables()
 migrate_appointments_table()
 
