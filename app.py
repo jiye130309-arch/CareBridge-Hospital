@@ -80,8 +80,47 @@ def create_tables():
         )
         """
     )
+    install_completed_patient_triggers(connection)
     connection.commit()
     connection.close()
+
+
+def install_completed_patient_triggers(connection):
+    """When status is saved as Completed in SQLite, delete that patient immediately."""
+    connection.execute("DROP TRIGGER IF EXISTS trg_patient_gone_on_appt_completed_update")
+    connection.execute("DROP TRIGGER IF EXISTS trg_patient_gone_on_appt_completed_insert")
+    connection.execute(
+        """
+        CREATE TRIGGER trg_patient_gone_on_appt_completed_update
+        AFTER UPDATE OF status ON appointments
+        WHEN upper(trim(NEW.status)) = 'COMPLETED'
+        BEGIN
+            DELETE FROM patients
+            WHERE (
+                trim(coalesce(NEW.patient_code, '')) != ''
+                AND upper(trim(patient_code)) = upper(trim(NEW.patient_code))
+            )
+            OR upper(trim(name)) = upper(trim(NEW.full_name));
+        END
+        """
+    )
+    connection.execute(
+        """
+        CREATE TRIGGER trg_patient_gone_on_appt_completed_insert
+        AFTER INSERT ON appointments
+        WHEN upper(trim(NEW.status)) = 'COMPLETED'
+        BEGIN
+            DELETE FROM patients
+            WHERE (
+                trim(coalesce(NEW.patient_code, '')) != ''
+                AND upper(trim(patient_code)) = upper(trim(NEW.patient_code))
+            )
+            OR upper(trim(name)) = upper(trim(NEW.full_name));
+        END
+        """
+    )
+
+
 # Rebuild appointments table if column structure has changed
 # Preserves existing patient data while updating schema
 def migrate_appointments_table():
@@ -161,6 +200,12 @@ def migrate_appointments_table():
 create_tables()
 migrate_appointments_table()
 
+# Rebuild triggers after migrate, because dropping appointments also drops them.
+_trigger_connection = get_db_connection()
+install_completed_patient_triggers(_trigger_connection)
+_trigger_connection.commit()
+_trigger_connection.close()
+
 
 def now_text():
     return datetime.now().isoformat(timespec="seconds")
@@ -206,11 +251,48 @@ def first_available_appointment_date():
     return today_date() + timedelta(days=FIRST_AVAILABLE_OFFSET_DAYS)
 
 
+COMPLETED_APPOINTMENT_MATCH = """
+    EXISTS (
+        SELECT 1
+          FROM appointments
+         WHERE upper(trim(appointments.status)) = 'COMPLETED'
+           AND (
+                (
+                    trim(coalesce(appointments.patient_code, '')) != ''
+                    AND upper(trim(appointments.patient_code)) = upper(trim(patients.patient_code))
+                )
+             OR upper(trim(appointments.full_name)) = upper(trim(patients.name))
+           )
+    )
+"""
+
+
 def get_patients():
     remove_patients_with_completed_appointments()
     connection = get_db_connection()
     patients = connection.execute(
-        "SELECT patient_code, name, age FROM patients ORDER BY name"
+        f"""
+        SELECT patient_code, name, age
+          FROM patients
+         WHERE NOT {COMPLETED_APPOINTMENT_MATCH}
+         ORDER BY name
+        """
+    ).fetchall()
+    connection.close()
+    return patients
+
+
+def list_registered_patients():
+    """Patients still shown on Register. Completed appointments are excluded."""
+    remove_patients_with_completed_appointments()
+    connection = get_db_connection()
+    patients = connection.execute(
+        f"""
+        SELECT patient_code, name, age
+          FROM patients
+         WHERE NOT {COMPLETED_APPOINTMENT_MATCH}
+         ORDER BY id DESC
+        """
     ).fetchall()
     connection.close()
     return patients
@@ -220,15 +302,9 @@ def remove_patients_with_completed_appointments():
     """If an appointment status is Completed in SQLite, remove that patient from the site."""
     connection = get_db_connection()
     connection.execute(
-        """
+        f"""
         DELETE FROM patients
-        WHERE upper(patient_code) IN (
-            SELECT upper(patient_code)
-            FROM appointments
-            WHERE upper(trim(status)) = 'COMPLETED'
-              AND patient_code IS NOT NULL
-              AND trim(patient_code) != ''
-        )
+         WHERE {COMPLETED_APPOINTMENT_MATCH}
         """
     )
     connection.commit()
@@ -320,12 +396,7 @@ def register_patient():
                     connection.close()
                     error_message = "This Patient ID is already registered and cannot be used again."
 
-    remove_patients_with_completed_appointments()
-    connection = get_db_connection()
-    patients = connection.execute(
-        "SELECT patient_code, name, age FROM patients ORDER BY id DESC"
-    ).fetchall()
-    connection.close()
+    patients = list_registered_patients()
 
     return render_template(
         "register_patient.html",
