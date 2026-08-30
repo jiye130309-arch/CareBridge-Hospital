@@ -17,6 +17,8 @@ BASE_CONSULTATION_FEE = 100
 LAB_TEST_RATE = 10
 SUBSIDISED_DISCOUNT = 0.30
 # Billing rates and discounts
+DATABASE_SCHEMA_VERSION = 2
+
 
 def get_db_connection():
     """Open the SQLite database used by CareBridge."""
@@ -92,8 +94,8 @@ def install_completed_patient_triggers(connection):
     connection.execute(
         """
         CREATE TRIGGER trg_patient_gone_on_appt_completed_update
-        AFTER UPDATE OF status ON appointments
-        WHEN upper(trim(NEW.status)) = 'COMPLETED'
+        AFTER UPDATE ON appointments
+        WHEN upper(trim(replace(replace(NEW.status, char(160), ' '), char(9), ' '))) IN ('COMPLETED', 'COMPLETE')
         BEGIN
             DELETE FROM patients
             WHERE (
@@ -108,7 +110,7 @@ def install_completed_patient_triggers(connection):
         """
         CREATE TRIGGER trg_patient_gone_on_appt_completed_insert
         AFTER INSERT ON appointments
-        WHEN upper(trim(NEW.status)) = 'COMPLETED'
+        WHEN upper(trim(replace(replace(NEW.status, char(160), ' '), char(9), ' '))) IN ('COMPLETED', 'COMPLETE')
         BEGIN
             DELETE FROM patients
             WHERE (
@@ -242,6 +244,50 @@ def is_valid_patient_id(patient_code):
     return int(match.group(1)) >= 1
 
 
+def apply_sql_updates():
+    """One-time SQL update: remove patients and bookings from before the current Register rules."""
+    connection = get_db_connection()
+    version = connection.execute("PRAGMA user_version").fetchone()[0]
+    if version < DATABASE_SCHEMA_VERSION:
+        connection.execute("DELETE FROM appointments")
+        connection.execute("DELETE FROM patients")
+        sequence_table = connection.execute(
+            "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'sqlite_sequence'"
+        ).fetchone()
+        if sequence_table:
+            connection.execute("DELETE FROM sqlite_sequence WHERE name IN ('appointments', 'patients')")
+        connection.execute(f"PRAGMA user_version = {DATABASE_SCHEMA_VERSION}")
+        connection.commit()
+    connection.close()
+    remove_invalid_legacy_patients()
+
+
+def remove_invalid_legacy_patients():
+    """Delete leftover rows that do not use the current Patient ID or name rules."""
+    connection = get_db_connection()
+    patients = connection.execute("SELECT id, patient_code, name FROM patients").fetchall()
+    for patient in patients:
+        patient_code = (patient["patient_code"] or "").strip().upper()
+        name = (patient["name"] or "").strip()
+        if not is_valid_patient_id(patient_code) or not is_real_patient_name(name):
+            connection.execute("DELETE FROM patients WHERE id = ?", (patient["id"],))
+    connection.execute(
+        """
+        DELETE FROM appointments
+         WHERE patient_code IS NULL
+            OR trim(patient_code) = ''
+            OR upper(trim(patient_code)) NOT IN (
+                SELECT upper(trim(patient_code)) FROM patients
+            )
+        """
+    )
+    connection.commit()
+    connection.close()
+
+
+apply_sql_updates()
+
+
 def today_date():
     return date.today()
 
@@ -251,11 +297,16 @@ def first_available_appointment_date():
     return today_date() + timedelta(days=FIRST_AVAILABLE_OFFSET_DAYS)
 
 
+COMPLETED_STATUS_SQL = """
+    upper(trim(replace(replace(appointments.status, char(160), ' '), char(9), ' ')))
+    IN ('COMPLETED', 'COMPLETE')
+"""
+
 COMPLETED_APPOINTMENT_MATCH = """
     EXISTS (
         SELECT 1
           FROM appointments
-         WHERE upper(trim(appointments.status)) = 'COMPLETED'
+         WHERE """ + COMPLETED_STATUS_SQL + """
            AND (
                 (
                     trim(coalesce(appointments.patient_code, '')) != ''
@@ -300,15 +351,19 @@ def list_registered_patients():
 
 def remove_patients_with_completed_appointments():
     """If an appointment status is Completed in SQLite, remove that patient from the site."""
-    connection = get_db_connection()
-    connection.execute(
-        f"""
-        DELETE FROM patients
-         WHERE {COMPLETED_APPOINTMENT_MATCH}
-        """
-    )
-    connection.commit()
-    connection.close()
+    try:
+        connection = get_db_connection()
+        connection.execute(
+            f"""
+            DELETE FROM patients
+             WHERE {COMPLETED_APPOINTMENT_MATCH}
+            """
+        )
+        connection.commit()
+        connection.close()
+    except sqlite3.OperationalError:
+        # The database may be open in DB Browser. The next page load will retry.
+        return
 
 
 def get_assigned_room(severity):
