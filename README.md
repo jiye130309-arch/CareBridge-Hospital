@@ -9,13 +9,14 @@ CareBridge Hospital modernises traditional hospital management workflows into a 
 > **Framework:** Flask
 > **Database:** SQLite
 > **Containerisation:** Docker
+> **Container Management:** Docker Compose
 > **Public Access:** ngrok
 
 ---
 
-## 📌 Project Overview
+# 📌 Project Overview
 
-**CareBridge Hospital** is a Flask-based hospital management web application developed as part of a web migration project.
+CareBridge Hospital is a Flask-based hospital management web application developed as part of a web migration project.
 
 The system provides hospital staff with a simple web interface for performing common hospital management tasks while storing records in a SQLite database.
 
@@ -29,7 +30,7 @@ The system provides hospital staff with a simple web interface for performing co
 * 🗄️ SQLite database storage
 * 🐳 Docker containerisation
 * 📦 Docker Compose
-* 🌐 ngrok public tunnelling
+* 🌐 ngrok public HTTPS tunnelling
 * 🔐 Input validation
 * 💾 Persistent database storage
 
@@ -37,18 +38,19 @@ The system provides hospital staff with a simple web interface for performing co
 
 # 🛠️ Technologies Used
 
-| Technology         | Purpose                                |
-| ------------------ | -------------------------------------- |
-| **Python**         | Main programming language              |
-| **Flask**          | Web application framework              |
-| **SQLite**         | Database management                    |
-| **HTML**           | Web page structure                     |
-| **CSS**            | User interface styling                 |
-| **Docker**         | Application containerisation           |
-| **Docker Compose** | Container configuration and management |
-| **ngrok**          | Public internet tunnel                 |
-| **Git**            | Version control                        |
-| **GitHub**         | Source code repository                 |
+| Technology     | Purpose                                |
+| -------------- | -------------------------------------- |
+| Python         | Main programming language              |
+| Flask          | Web application framework              |
+| SQLite         | Database management                    |
+| HTML           | Web page structure                     |
+| CSS            | User interface styling                 |
+| JavaScript     | Client-side functionality              |
+| Docker         | Application containerisation           |
+| Docker Compose | Container configuration and management |
+| ngrok          | Public HTTPS tunnel                    |
+| Git            | Version control                        |
+| GitHub         | Source code repository                 |
 
 ---
 
@@ -59,6 +61,7 @@ CareBridge-Hospital/
 │
 ├── app.py
 ├── carebridge.db
+├── carebridge.sql
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
@@ -117,8 +120,8 @@ The system requires:
 
 ### Available Departments
 
-* **GP**
-* **Specialist**
+* GP
+* Specialist
 
 ### Appointment Date Rule
 
@@ -156,8 +159,8 @@ The billing system calculates the patient's total bill based on:
 
 ### Patient Types
 
-* **Subsidised**
-* **Private**
+* Subsidised
+* Private
 
 The calculated bill is saved into the SQLite database.
 
@@ -171,9 +174,9 @@ The system automatically assigns an appropriate room based on the severity level
 
 | Severity | Assigned Room |
 | -------: | ------------- |
-|  **1–4** | Waiting Room  |
-|  **5–7** | Room 1        |
-| **8–10** | Room 2        |
+|      1–4 | Waiting Room  |
+|      5–7 | Room 1        |
+|     8–10 | Room 2        |
 
 The triage record is stored in SQLite.
 
@@ -188,6 +191,14 @@ The database file is:
 ```text
 carebridge.db
 ```
+
+The project also includes:
+
+```text
+carebridge.sql
+```
+
+for SQL/database definitions.
 
 ### Database Tables
 
@@ -234,7 +245,7 @@ The application validates user input before storing information.
 
 # 🐳 Docker
 
-Docker is used as an **environment standardiser** for the CareBridge Hospital application.
+Docker is used as an environment standardiser for the CareBridge Hospital application.
 
 The Docker image is based on:
 
@@ -242,11 +253,15 @@ The Docker image is based on:
 python:3.12-alpine
 ```
 
-The application runs inside a Docker container and uses **port 5000**.
+The application runs inside a Docker container on port:
+
+```text
+5000
+```
 
 ### Why Docker?
 
-Docker helps the project by providing:
+Docker provides:
 
 * Consistent development environment
 * Dependency management
@@ -261,7 +276,7 @@ Docker helps the project by providing:
 
 The Dockerfile is responsible for creating the CareBridge Hospital container environment.
 
-A simplified version of the Dockerfile is:
+Example structure:
 
 ```dockerfile
 FROM python:3.12-alpine
@@ -272,9 +287,9 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app.py .
-COPY templates/ ./templates/
-COPY static/ ./static/
+COPY . .
+
+EXPOSE 5000
 
 CMD ["python", "app.py"]
 ```
@@ -292,23 +307,59 @@ CMD ["python", "app.py"]
 
 ---
 
-# 🚀 Running with Docker Compose
+# 📦 Docker Compose
 
 Docker Compose is the recommended way to run CareBridge Hospital.
 
-## 1. Open the project directory
+The configuration file is:
 
-PowerShell:
+```text
+docker-compose.yml
+```
+
+## Docker Compose Configuration
+
+```yaml
+services:
+  carebridge:
+    build: .
+    container_name: carebridge-hospital
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./carebridge.db:/app/carebridge.db
+    restart: unless-stopped
+```
+
+### Configuration Explanation
+
+| Configuration             | Purpose                                        |
+| ------------------------- | ---------------------------------------------- |
+| `services`                | Defines the application service                |
+| `carebridge`              | Name of the CareBridge service                 |
+| `build: .`                | Builds the image using the Dockerfile          |
+| `container_name`          | Gives the container a fixed name               |
+| `ports`                   | Maps host port `5000` to container port `5000` |
+| `volumes`                 | Persists the SQLite database                   |
+| `restart: unless-stopped` | Restarts the container unless manually stopped |
+
+---
+
+# 🚀 Running with Docker Compose
+
+## 1. Open the Project Directory
+
+Open PowerShell:
 
 ```powershell
 cd "C:\Users\jiye1\Downloads\CareBridge-Hospital"
 ```
 
-If the repository was cloned into another directory, use that directory instead.
+If the repository is stored somewhere else, use that directory instead.
 
 ---
 
-## 2. Build and start the application
+## 2. Build and Start the Application
 
 ```powershell
 docker compose up --build
@@ -322,9 +373,9 @@ http://localhost:5000
 
 ---
 
-## 3. Run in the background
+## 3. Run in the Background
 
-To start the application in detached mode:
+For normal demonstrations:
 
 ```powershell
 docker compose up --build -d
@@ -332,24 +383,17 @@ docker compose up --build -d
 
 ---
 
-## 4. Check the container
+## 4. Check the Container
 
 ```powershell
 docker compose ps
 ```
 
-You should see the CareBridge container running and port `5000` mapped.
-
-Example:
-
-```text
-carebridge-hospital-container
-0.0.0.0:5000->5000/tcp
-```
+You should see the CareBridge container running with port `5000` mapped.
 
 ---
 
-## 5. View application logs
+## 5. View Application Logs
 
 ```powershell
 docker compose logs
@@ -363,7 +407,7 @@ docker compose logs -f
 
 ---
 
-## 6. Stop the application
+## 6. Stop the Application
 
 ```powershell
 docker compose down
@@ -371,35 +415,9 @@ docker compose down
 
 ---
 
-# 🐳 Running with Docker Directly
-
-Docker Compose is recommended, but the application can also be started manually.
-
-## Build the Docker image
-
-```powershell
-docker build -t carebridge-hospital .
-```
-
-## Run the container
-
-```powershell
-docker run -p 5000:5000 carebridge-hospital
-```
-
-Then open:
-
-```text
-http://localhost:5000
-```
-
----
-
 # 💾 SQLite Database Persistence
 
-The project uses a Docker volume mapping for the SQLite database.
-
-The `docker-compose.yml` contains a database mapping similar to:
+The project uses a Docker volume mapping for the SQLite database:
 
 ```yaml
 volumes:
@@ -408,36 +426,30 @@ volumes:
 
 This maps the SQLite database on the host machine to the database location inside the Docker container.
 
-### Why this is important
-
-Without persistent storage, data stored only inside a container could be lost when the container is removed.
-
-The volume mapping allows the project to continue using the host's:
-
-```text
-carebridge.db
-```
-
-when the Docker container is restarted.
+This allows the database to remain available when the Docker container is restarted or recreated.
 
 ---
 
-# 🌐 Using ngrok
+# 🌐 ngrok
 
-ngrok is used as a **local internet gateway** to make the locally running CareBridge Hospital application accessible through a public HTTPS URL.
+ngrok is used to make the locally running CareBridge Hospital application accessible through a public HTTPS URL.
 
-The CareBridge application runs on **port 5000**.
+The CareBridge application runs on:
 
-The basic architecture is:
+```text
+http://localhost:5000
+```
+
+The architecture is:
 
 ```text
 Internet
    │
    ▼
- ngrok Public HTTPS URL
+ngrok Public HTTPS URL
    │
    ▼
-Port 5000
+localhost:5000
    │
    ▼
 Docker Container
@@ -464,16 +476,16 @@ cd "C:\Users\jiye1\Downloads\CareBridge-Hospital"
 Start Docker Compose:
 
 ```powershell
-docker compose up -d
+docker compose up --build -d
 ```
 
-Check that the container is running:
+Check the container:
 
 ```powershell
 docker compose ps
 ```
 
-Then test the local application:
+Test the local application:
 
 ```text
 http://localhost:5000
@@ -483,36 +495,62 @@ Make sure CareBridge Hospital works locally before starting ngrok.
 
 ---
 
-# 2. Locate the ngrok Executable
+## 2. Check ngrok
 
-Because ngrok is installed through the **Microsoft Store**, the executable may not be directly available through the normal PowerShell `PATH`.
+ngrok is installed and configured on the Windows system.
 
-Run:
-
-```powershell
-$pkg = Get-AppxPackage ngrok.ngrok
-```
-
-Then locate `ngrok.exe`:
+Check the installed version:
 
 ```powershell
-$ngrokExe = (Get-ChildItem $pkg.InstallLocation -Recurse -Filter "ngrok.exe" -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
+ngrok version
 ```
 
-This stores the location of the ngrok executable in:
+Expected output:
 
 ```text
-$ngrokExe
+ngrok version 3.x.x
 ```
 
 ---
 
-# 3. Start the ngrok Tunnel
+## 3. Configure the ngrok Authentication Token
+
+Configure your own ngrok authentication token:
+
+```powershell
+ngrok config add-authtoken "YOUR_NGROK_AUTHTOKEN"
+```
+
+Replace:
+
+```text
+YOUR_NGROK_AUTHTOKEN
+```
+
+with your own token.
+
+### ⚠️ Important
+
+**Never put your actual ngrok authentication token in this README or commit it to GitHub.**
+
+Keep the token private.
+
+Check the configuration:
+
+```powershell
+ngrok config check
+```
+
+---
+
+# 🚀 Start the ngrok Tunnel
+
+Once CareBridge Hospital is running on port `5000`, open another PowerShell window.
 
 Run:
 
 ```powershell
-& "$ngrokExe" http 5000
+ngrok http 5000
 ```
 
 ngrok will create a public HTTPS forwarding URL.
@@ -521,76 +559,68 @@ Example:
 
 ```text
 Forwarding
-https://xxxx.ngrok-free.dev -> http://localhost:5000
+https://xxxx-xxxx.ngrok-free.app -> http://localhost:5000
 ```
 
 Copy the HTTPS URL and open it in a browser.
 
-The public URL can also be opened from another device.
+The public URL can also be accessed from another device.
 
 ---
 
 # ⚡ Quick ngrok Command
 
-If `$ngrokExe` has already been defined in the current PowerShell session, you only need:
+Because ngrok is available through the Windows PATH, the tunnel can be started directly with:
 
 ```powershell
-& "$ngrokExe" http 5000
+ngrok http 5000
 ```
 
-If PowerShell has been closed, define the executable path again:
-
-```powershell
-$pkg = Get-AppxPackage ngrok.ngrok
-
-$ngrokExe = (Get-ChildItem $pkg.InstallLocation -Recurse -Filter "ngrok.exe" -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
-```
-
-Then:
-
-```powershell
-& "$ngrokExe" http 5000
-```
+No additional executable path configuration is required.
 
 ---
 
 # 🔄 Complete Startup Sequence
 
-The normal CareBridge demonstration workflow is:
+The normal CareBridge Hospital demonstration workflow is:
+
+### Terminal 1 — Docker
 
 ```powershell
 cd "C:\Users\jiye1\Downloads\CareBridge-Hospital"
 
-docker compose up -d
+docker compose up --build -d
 
 docker compose ps
-
-$pkg = Get-AppxPackage ngrok.ngrok
-
-$ngrokExe = (Get-ChildItem $pkg.InstallLocation -Recurse -Filter "ngrok.exe" -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
-
-& "$ngrokExe" http 5000
 ```
 
-After ngrok starts, look for:
+Test:
+
+```text
+http://localhost:5000
+```
+
+### Terminal 2 — ngrok
+
+```powershell
+ngrok http 5000
+```
+
+Then copy the HTTPS URL displayed under:
 
 ```text
 Forwarding
 ```
 
-Then copy the generated:
+Example:
 
 ```text
-https://xxxx.ngrok-free.dev
+https://xxxx-xxxx.ngrok-free.app
 ```
-
-address.
 
 ---
 
 # 🔄 Complete System Workflow
-
-The overall CareBridge Hospital workflow is:
 
 ```text
                     ┌─────────────────┐
@@ -605,8 +635,12 @@ The overall CareBridge Hospital workflow is:
                              │
                              ▼
                     ┌─────────────────┐
-                    │ Docker Container│
-                    │    Port 5000    │
+                    │ localhost:5000  │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ Docker Compose  │
                     └────────┬────────┘
                              │
                              ▼
@@ -627,31 +661,31 @@ The overall CareBridge Hospital workflow is:
 
 Git is used to track project development and GitHub is used as the remote repository.
 
-## Check project status
+## Check Project Status
 
 ```powershell
 git status
 ```
 
-## Add changes
+## Add Changes
 
 ```powershell
 git add .
 ```
 
-## Commit changes
+## Commit Changes
 
 ```powershell
 git commit -m "Update CareBridge Hospital"
 ```
 
-## Pull changes
+## Pull Changes
 
 ```powershell
 git pull --rebase origin main
 ```
 
-## Push changes to GitHub
+## Push Changes to GitHub
 
 ```powershell
 git push origin main
@@ -663,17 +697,17 @@ git push origin main
 
 ```text
 Edit Code
-    ↓
+   ↓
 git status
-    ↓
+   ↓
 git add .
-    ↓
+   ↓
 git commit
-    ↓
-git pull --rebase
-    ↓
-git push
-    ↓
+   ↓
+git pull --rebase origin main
+   ↓
+git push origin main
+   ↓
 GitHub
 ```
 
@@ -700,7 +734,7 @@ After starting CareBridge Hospital, test each major function.
 1. Select an existing registered patient.
 2. Select `GP` or `Specialist`.
 3. Select an appointment date.
-4. Make sure the appointment is at least **8 days from today**.
+4. Make sure the appointment is at least 8 days from today.
 5. Submit the appointment.
 6. Check the appointment confirmation page.
 7. Verify that the appointment status is `Pending`.
@@ -726,9 +760,242 @@ After starting CareBridge Hospital, test each major function.
 
 ---
 
+# ⚠️ Troubleshooting
+
+## Flask Is Not Installed
+
+If you run:
+
+```powershell
+python app.py
+```
+
+and receive:
+
+```text
+ModuleNotFoundError: No module named 'flask'
+```
+
+you can install Flask locally:
+
+```powershell
+python -m pip install flask
+```
+
+For the normal CareBridge setup, Docker Compose is recommended because the required Python dependencies are installed inside the Docker container.
+
+---
+
+## Docker Command Not Recognised
+
+Check:
+
+```powershell
+docker --version
+```
+
+Then:
+
+```powershell
+docker info
+```
+
+Make sure Docker Desktop is installed and running.
+
+---
+
+## Container Is Not Running
+
+Check:
+
+```powershell
+docker compose ps
+```
+
+View logs:
+
+```powershell
+docker compose logs
+```
+
+Rebuild the application:
+
+```powershell
+docker compose down
+docker compose up --build -d
+```
+
+---
+
+## Website Is Not Updating
+
+If application changes are not appearing, rebuild the Docker image:
+
+```powershell
+docker compose down
+docker compose up --build -d
+```
+
+Then refresh:
+
+```text
+http://localhost:5000
+```
+
+You can also check:
+
+```powershell
+docker compose logs -f
+```
+
+---
+
+## ngrok Command Not Recognised
+
+If PowerShell displays:
+
+```text
+ngrok : The term 'ngrok' is not recognized
+```
+
+make sure you have:
+
+1. Installed ngrok.
+2. Added ngrok to the Windows PATH.
+3. Closed and reopened PowerShell.
+
+Then test:
+
+```powershell
+ngrok version
+```
+
+If the version appears, start the tunnel:
+
+```powershell
+ngrok http 5000
+```
+
+---
+
+## ngrok Cannot Connect to CareBridge
+
+First check that CareBridge works locally:
+
+```text
+http://localhost:5000
+```
+
+Then check Docker:
+
+```powershell
+docker compose ps
+```
+
+If the container is not running:
+
+```powershell
+docker compose up --build -d
+```
+
+Then start:
+
+```powershell
+ngrok http 5000
+```
+
+---
+
+## Port 5000 Is Already in Use
+
+Check which process is using port `5000`:
+
+```powershell
+netstat -ano | findstr :5000
+```
+
+If Docker is already running CareBridge on port `5000`, do not start another Flask instance using:
+
+```powershell
+python app.py
+```
+
+Use the Docker container instead.
+
+---
+
+# 📦 Requirements
+
+## Local Development
+
+* Python 3.x
+* Flask
+* SQLite
+* Git
+
+## Containerised Development
+
+* Docker Desktop
+* Docker Compose
+
+## Public Demonstration
+
+* ngrok
+* ngrok authentication token
+
+---
+
+# 🚀 Quick Start
+
+For the fastest CareBridge Hospital demonstration:
+
+### Step 1 — Open the Project
+
+```powershell
+cd "C:\Users\jiye1\Downloads\CareBridge-Hospital"
+```
+
+### Step 2 — Start Docker
+
+```powershell
+docker compose up --build -d
+```
+
+### Step 3 — Check Docker
+
+```powershell
+docker compose ps
+```
+
+### Step 4 — Test Locally
+
+Open:
+
+```text
+http://localhost:5000
+```
+
+### Step 5 — Start ngrok
+
+Open another PowerShell window:
+
+```powershell
+ngrok http 5000
+```
+
+### Step 6 — Open the Public URL
+
+Copy the HTTPS URL shown by ngrok:
+
+```text
+https://xxxx-xxxx.ngrok-free.app
+```
+
+---
+
 # 🤖 AI-Assisted Development
 
-AI tools were used as a **learning and development assistant** during the project.
+AI tools were used as learning and development assistants throughout the project.
 
 AI assistance included:
 
@@ -736,7 +1003,8 @@ AI assistance included:
 
 * Flask concepts
 * Docker concepts
-* ngrok concepts
+* Docker Compose
+* ngrok
 * Git and GitHub
 * Python programming
 * SQLite
@@ -782,12 +1050,16 @@ AI assistance was also used for:
 
 # 🧠 Example AI Prompts
 
-Some examples of prompts used during development include:
-
 ### Docker
 
 ```text
 What is Docker and how do I use it for my Flask CareBridge Hospital application?
+```
+
+### Docker Compose
+
+```text
+How can I use Docker Compose to run my Flask CareBridge Hospital application on port 5000?
 ```
 
 ### ngrok
@@ -825,259 +1097,60 @@ Please observe the following:
 * Do not enter real patient information.
 * Do not enter sensitive medical information.
 * The SQLite database is intended for development and demonstration.
+* Never share your ngrok authentication token.
+* Never commit the ngrok authentication token to GitHub.
 * The temporary ngrok URL may change when the tunnel is restarted.
 * Do not share sensitive information through the public ngrok URL.
-* Port `5000` must be available.
 * Docker Desktop must be running before using Docker commands.
+* Port `5000` must be available.
 
 ---
 
-# ⚠️ Troubleshooting
+# 🌐 Public Access with ngrok
 
-## Docker command not recognised
-
-Make sure:
-
-1. Docker Desktop is installed.
-2. Docker Desktop is running.
-3. Docker's environment is available in PowerShell.
-
-Check:
+The standard ngrok command creates a temporary public HTTPS URL:
 
 ```powershell
-docker --version
+ngrok http 5000
 ```
 
-Then:
+The generated URL may change when the ngrok tunnel is stopped and started again.
 
-```powershell
-docker info
-```
-
----
-
-## Container is not running
-
-Check:
-
-```powershell
-docker compose ps
-```
-
-Then view logs:
-
-```powershell
-docker compose logs
-```
-
-You can rebuild the application:
-
-```powershell
-docker compose up --build
-```
-
----
-
-## Website is not updating
-
-Try rebuilding the Docker image:
-
-```powershell
-docker compose down
-docker compose up --build -d
-```
-
-Then refresh:
-
-```text
-http://localhost:5000
-```
-
-If necessary, check the logs:
-
-```powershell
-docker compose logs
-```
-
----
-
-## ngrok command not recognised
-
-Because ngrok was installed through the Microsoft Store, PowerShell may not recognise:
-
-```powershell
-ngrok
-```
-
-Instead, locate the executable:
-
-```powershell
-$pkg = Get-AppxPackage ngrok.ngrok
-
-$ngrokExe = (Get-ChildItem $pkg.InstallLocation -Recurse -Filter "ngrok.exe" -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
-```
-
-Then run:
-
-```powershell
-& "$ngrokExe" http 5000
-```
-
----
-
-## ngrok cannot connect to CareBridge
-
-First confirm that CareBridge works locally:
-
-```text
-http://localhost:5000
-```
-
-Then confirm Docker is running:
-
-```powershell
-docker compose ps
-```
-
-Then start ngrok:
-
-```powershell
-& "$ngrokExe" http 5000
-```
-
----
-
-# 📦 Requirements
-
-## Local Development
-
-* Python 3.x
-* Flask
-* SQLite
-* Git
-
-## Containerised Development
-
-* Docker Desktop
-* Docker Compose
-
-## Public Demonstration
-
-* ngrok
-
----
-
-# 🚀 Quick Start
-
-For the fastest setup using Docker Compose:
-
-### Step 1 — Open the project
-
-```powershell
-cd "C:\Users\jiye1\Downloads\CareBridge-Hospital"
-```
-
-### Step 2 — Start CareBridge
-
-```powershell
-docker compose up --build -d
-```
-
-### Step 3 — Check the container
-
-```powershell
-docker compose ps
-```
-
-### Step 4 — Open locally
-
-```text
-http://localhost:5000
-```
-
-### Step 5 — Locate ngrok
-
-```powershell
-$pkg = Get-AppxPackage ngrok.ngrok
-
-$ngrokExe = (Get-ChildItem $pkg.InstallLocation -Recurse -Filter "ngrok.exe" -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
-```
-
-### Step 6 — Start ngrok
-
-```powershell
-& "$ngrokExe" http 5000
-```
-
-### Step 7 — Open the public URL
-
-Copy the HTTPS URL displayed under:
-
-```text
-Forwarding
-```
-
-Example:
-
-```text
-https://xxxx.ngrok-free.dev
-```
+For a fixed public address, a reserved ngrok domain or custom domain can be configured separately through the ngrok account.
 
 ---
 
 # 📊 Technology Architecture
 
-```text
-┌─────────────────────────────────────────┐
-│               User / Staff              │
-└────────────────────┬────────────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────┐
-│              Web Browser                │
-└────────────────────┬────────────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────┐
-│                 ngrok                   │
-│          Public HTTPS Tunnel            │
-└────────────────────┬────────────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────┐
-│           Docker Container              │
-│                                         │
-│  ┌───────────────────────────────────┐  │
-│  │          Flask Application        │  │
-│  │              app.py               │  │
-│  └──────────────────┬────────────────┘  │
-│                     │                   │
-│                     ▼                   │
-│  ┌───────────────────────────────────┐  │
-│  │          SQLite Database          │  │
-│  │          carebridge.db            │  │
-│  └───────────────────────────────────┘  │
-└─────────────────────────────────────────┘
-```
+| Layer                | Technology            |
+| -------------------- | --------------------- |
+| Frontend             | HTML, CSS, JavaScript |
+| Backend              | Python, Flask         |
+| Database             | SQLite                |
+| Containerisation     | Docker                |
+| Container Management | Docker Compose        |
+| Public Tunnel        | ngrok                 |
+| Version Control      | Git                   |
+| Repository           | GitHub                |
 
 ---
 
 # 📌 Project Information
 
-| Item                     | Details                             |
-| ------------------------ | ----------------------------------- |
-| **Project**              | CareBridge Hospital                 |
-| **Application**          | Hospital Management Web Application |
-| **Programming Language** | Python                              |
-| **Framework**            | Flask                               |
-| **Database**             | SQLite                              |
-| **Frontend**             | HTML / CSS / JavaScript             |
-| **Containerisation**     | Docker                              |
-| **Container Management** | Docker Compose                      |
-| **Public Tunnel**        | ngrok                               |
-| **Version Control**      | Git                                 |
-| **Repository Hosting**   | GitHub                              |
-| **Application Port**     | 5000                                |
+| Item                 | Details                             |
+| -------------------- | ----------------------------------- |
+| Project              | CareBridge Hospital                 |
+| Application          | Hospital Management Web Application |
+| Programming Language | Python                              |
+| Framework            | Flask                               |
+| Database             | SQLite                              |
+| Frontend             | HTML / CSS / JavaScript             |
+| Containerisation     | Docker                              |
+| Container Management | Docker Compose                      |
+| Public Tunnel        | ngrok                               |
+| Version Control      | Git                                 |
+| Repository Hosting   | GitHub                              |
+| Application Port     | 5000                                |
 
 ---
 
@@ -1085,43 +1158,43 @@ https://xxxx.ngrok-free.dev
 
 **CareBridge Hospital**
 
-Repository:
-
-`https://github.com/jiye130309-arch/CareBridge-Hospital`
+```text
+https://github.com/jiye130309-arch/CareBridge-Hospital
+```
 
 ---
 
 # 🎯 Project Workflow
 
 ```text
-                DEVELOPMENT
-                     │
-                     ▼
-                Write Code
-                     │
-                     ▼
-               Test Locally
-                     │
-                     ▼
-               Git / GitHub
-                     │
-                     ▼
-              Docker Build
-                     │
-                     ▼
-             Docker Container
-                     │
-                     ▼
-              localhost:5000
-                     │
-                     ▼
-                  ngrok
-                     │
-                     ▼
+                 DEVELOPMENT
+                      │
+                      ▼
+                  Write Code
+                      │
+                      ▼
+                 Test Locally
+                      │
+                      ▼
+                  Git / GitHub
+                      │
+                      ▼
+                 Docker Build
+                      │
+                      ▼
+               Docker Compose
+                      │
+                      ▼
+                 localhost:5000
+                      │
+                      ▼
+                    ngrok
+                      │
+                      ▼
              Public HTTPS URL
-                     │
-                     ▼
-              Demonstration
+                      │
+                      ▼
+                 Demonstration
 ```
 
 ---
@@ -1132,25 +1205,27 @@ CareBridge Hospital demonstrates how traditional hospital management workflows c
 
 The project combines:
 
-* **Flask** for the web application
-* **SQLite** for data storage
-* **HTML/CSS** for the user interface
-* **Docker** for environment standardisation
-* **Docker Compose** for container management
-* **Git/GitHub** for version control
-* **ngrok** for public access
-* **AI tools** for learning, development and troubleshooting
+* 🐍 **Flask** for the web application
+* 🗄️ **SQLite** for data storage
+* 🎨 **HTML/CSS/JavaScript** for the user interface
+* 🐳 **Docker** for containerisation
+* 📦 **Docker Compose** for container management
+* 🔧 **Git/GitHub** for version control
+* 🌐 **ngrok** for public HTTPS access
+* 🤖 **AI tools** for learning, development and troubleshooting
 
-The project provides a practical example of developing, containerising, testing and demonstrating a web-based application.
+The project provides a practical example of developing, testing, containerising, version-controlling and demonstrating a web-based hospital management system.
 
 ---
 
-## ⚠️ Educational Use
+# ⚠️ Educational Use
 
-**CareBridge Hospital is intended for educational and demonstration purposes only.**
+CareBridge Hospital is intended for **educational and demonstration purposes only**.
 
 Do not use this application to store or process real patient data or sensitive medical information.
 
 ---
 
-**🏥 CareBridge Hospital — Modernising Hospital Management Through Web Technology.**
+# 🏥 CareBridge Hospital
+
+**Modernising Hospital Management Through Web Technology**
