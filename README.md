@@ -1,52 +1,39 @@
-# CareBridge Hospital
+# 🏥 CareBridge Hospital
 
-> A containerised web-based hospital management system built with Flask and SQLite, providing digital workflows for patient registration, appointment management, billing, and triage.
+> A containerised web-based hospital management system developed with Python Flask and SQLite to digitalise core hospital workflows including patient registration, appointments, billing, and triage.
 
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python\&logoColor=white)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-3.x-000000?logo=flask\&logoColor=white)](https://flask.palletsprojects.com/)
-[![SQLite](https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite\&logoColor=white)](https://www.sqlite.org/)
+[![Flask](https://img.shields.io/badge/Flask-Web%20Framework-000000?logo=flask\&logoColor=white)](https://flask.palletsprojects.com/)
+[![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite\&logoColor=white)](https://www.sqlite.org/)
 [![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker\&logoColor=white)](https://www.docker.com/)
 [![Docker Compose](https://img.shields.io/badge/Docker%20Compose-Enabled-2496ED?logo=docker\&logoColor=white)](https://docs.docker.com/compose/)
-[![ngrok](https://img.shields.io/badge/ngrok-Public%20Tunnel-1F1E37?logo=ngrok\&logoColor=white)](https://ngrok.com/)
+[![ngrok](https://img.shields.io/badge/ngrok-Public%20HTTPS-1F1E37?logo=ngrok\&logoColor=white)](https://ngrok.com/)
 
 ---
 
-## Overview
+## 📖 Overview
 
-**CareBridge Hospital** is a Flask-based hospital management application designed to demonstrate the migration of traditional hospital workflows into a centralised web application.
+**CareBridge Hospital** is a Flask-based hospital management web application created as part of a web migration project.
 
-The system provides a structured interface for hospital staff to manage core operational processes while using SQLite for persistent data storage.
+The system transforms common hospital workflows into a centralised web application, allowing staff to manage patient information, appointments, billing, and triage through a browser-based interface.
 
-The application is containerised with Docker and Docker Compose, while **ngrok** can be used to expose the local application through a public HTTPS endpoint for demonstrations and remote testing.
-
-### Core capabilities
-
-* Patient registration and management
-* Appointment booking and validation
-* Appointment status management
-* Patient billing
-* Triage and room assignment
-* SQLite database persistence
-* Input validation
-* Docker containerisation
-* Docker Compose orchestration
-* Public HTTPS access through ngrok
+The application uses **SQLite** for persistent data storage and is containerised using **Docker** and **Docker Compose**. **ngrok** can be used to expose the local application through a public HTTPS URL for demonstrations and remote access.
 
 ---
 
-## Features
+## ✨ Features
 
-### Patient Management
+### 👤 Patient Registration
 
-Staff can register patients with essential information including:
+Register and store patient information including:
 
 * Patient ID
 * Patient name
 * Age
 
-The system validates patient information before storing it in the database and prevents duplicate patient IDs.
+The system validates the submitted information and prevents duplicate patient IDs.
 
-### Appointment Management
+### 📅 Appointment Management
 
 Staff can create appointments for registered patients.
 
@@ -54,11 +41,12 @@ The appointment workflow includes:
 
 * Patient selection
 * Department selection
-* Appointment date validation
+* Appointment date selection
+* Appointment validation
 * Appointment confirmation
 * Appointment status tracking
 
-Supported departments:
+Supported departments include:
 
 * General Medicine
 * Cardiology
@@ -69,107 +57,100 @@ Supported departments:
 
 Appointments are initially assigned a **Pending** status.
 
-### Appointment Date Validation
-
-The application validates appointment dates before accepting a booking.
+### 🕐 Appointment Date Validation
 
 Appointments must be scheduled **more than 7 days from the current date**.
 
-This validation helps prevent appointments from being created within the restricted booking period.
+This prevents appointments from being created within the restricted booking period.
 
-### Billing
+### 💰 Billing
 
-The billing module calculates patient charges based on:
+The billing module calculates patient charges based on the selected billing information.
+
+The system supports:
 
 * Patient type
-* Consultation fees
-* Laboratory tests
-* Applicable charges or subsidies
+* Consultation charges
+* Laboratory test charges
+* Applicable subsidies
 
-Billing records are stored in SQLite for persistence.
+Billing information is stored in the SQLite database.
 
-### Triage
+### 🚑 Triage
 
-The triage module records a patient's severity level and assigns an appropriate room.
+The triage module records a patient's severity score and assigns an appropriate room.
 
-Severity scores range from **1 to 10**.
+Severity levels range from **1 to 10**.
 
-| Severity | Assignment   |
-| -------: | ------------ |
-|      1–4 | Waiting Room |
-|      5–7 | Room 1       |
-|     8–10 | Room 2       |
-
----
-
-## Technology Stack
-
-| Layer            | Technology              |
-| ---------------- | ----------------------- |
-| Backend          | Python / Flask          |
-| Frontend         | HTML / CSS / JavaScript |
-| Database         | SQLite                  |
-| Containerisation | Docker                  |
-| Orchestration    | Docker Compose          |
-| Public Access    | ngrok                   |
-| Version Control  | Git                     |
-| Repository       | GitHub                  |
+| Severity | Assigned Room |
+| -------: | ------------- |
+|      1–4 | Waiting Room  |
+|      5–7 | Room 1        |
+|     8–10 | Room 2        |
 
 ---
 
-## Architecture
+# 🛠️ Technology Stack
+
+| Technology     | Role                         |
+| -------------- | ---------------------------- |
+| Python 3.12    | Backend programming language |
+| Flask          | Web application framework    |
+| SQLite         | Database                     |
+| HTML           | Page structure               |
+| CSS            | User interface               |
+| JavaScript     | Client-side functionality    |
+| Docker         | Application containerisation |
+| Docker Compose | Container management         |
+| ngrok          | Public HTTPS tunnelling      |
+| Git            | Version control              |
+| GitHub         | Source code hosting          |
+
+---
+
+# 🏗️ System Architecture
 
 ```text
-                         ┌──────────────────────┐
-                         │      Web Browser     │
-                         └──────────┬───────────┘
-                                    │
-                                    │ HTTPS
-                                    ▼
-                         ┌──────────────────────┐
-                         │        ngrok         │
-                         │   Public HTTPS URL   │
-                         └──────────┬───────────┘
-                                    │
-                                    │ HTTP
-                                    ▼
-                         ┌──────────────────────┐
-                         │     Docker Host      │
-                         │     Port :5000       │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │   CareBridge Flask   │
-                         │      Container       │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │       SQLite         │
-                         │    carebridge.db     │
-                         └──────────────────────┘
-```
-
-### Request flow
-
-```text
-Browser
-   ↓
-ngrok
-   ↓
-localhost:5000
-   ↓
-Docker Compose
-   ↓
-Flask
-   ↓
-SQLite
+                         ┌───────────────────┐
+                         │     Web Browser   │
+                         └─────────┬─────────┘
+                                   │
+                                   │ HTTPS
+                                   ▼
+                         ┌───────────────────┐
+                         │       ngrok       │
+                         │  Public HTTPS URL │
+                         └─────────┬─────────┘
+                                   │
+                                   │ HTTP
+                                   ▼
+                         ┌───────────────────┐
+                         │  localhost:5000   │
+                         └─────────┬─────────┘
+                                   │
+                                   ▼
+                         ┌───────────────────┐
+                         │  Docker Compose   │
+                         └─────────┬─────────┘
+                                   │
+                                   ▼
+                         ┌───────────────────┐
+                         │ CareBridge Docker  │
+                         │     Container     │
+                         └─────────┬─────────┘
+                                   │
+                         ┌─────────┴─────────┐
+                         │                   │
+                         ▼                   ▼
+                  ┌─────────────┐     ┌─────────────┐
+                  │    Flask    │     │    SQLite   │
+                  │   app.py    │     │carebridge.db│
+                  └─────────────┘     └─────────────┘
 ```
 
 ---
 
-## Project Structure
+# 📂 Project Structure
 
 ```text
 CareBridge-Hospital/
@@ -203,77 +184,81 @@ CareBridge-Hospital/
 
 ---
 
-# Getting Started
+# 🚀 Getting Started
 
 ## Prerequisites
 
-Before running CareBridge Hospital, install:
+Install the following before running the project:
 
-* Python 3.12 or later
+* Python 3.12+
 * Docker Desktop
+* Docker Compose
 * Git
 * ngrok
 
-Docker Desktop should be running before starting the containerised application.
+Make sure **Docker Desktop is running** before starting the application with Docker Compose.
 
 ---
 
-## Clone the Repository
+# 📥 Installation
+
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/jiye130309-arch/CareBridge-Hospital.git
+```
+
+Move into the project directory:
+
+```bash
 cd CareBridge-Hospital
 ```
 
 ---
 
-# Running with Docker Compose
+# 🐳 Running with Docker
 
-Docker Compose is the recommended method for running the application.
+Docker Compose is the recommended method for running CareBridge Hospital.
 
-## Start the application
+## 2. Build and Start
 
 ```powershell
 docker compose up --build -d
 ```
 
-The application will be available locally at:
+This command:
 
-```text
-http://localhost:5000
-```
+1. Builds the Docker image.
+2. Installs the Python dependencies.
+3. Copies the Flask application and frontend files.
+4. Creates the CareBridge container.
+5. Starts the application in the background.
 
-## Check container status
+---
+
+## 3. Check the Container
 
 ```powershell
 docker compose ps
 ```
 
-## View logs
+The CareBridge container should be running.
 
-```powershell
-docker compose logs -f
-```
+---
 
-## Restart the application
+## 4. Open the Application
 
-```powershell
-docker compose restart
-```
+Open a browser and visit:
 
-## Stop the application
-
-```powershell
-docker compose down
+```text
+http://localhost:5000
 ```
 
 ---
 
-# Docker Configuration
+# 🐳 Dockerfile
 
-The project uses a `Dockerfile` to create the application image and `docker-compose.yml` to manage the container.
-
-### Dockerfile
+CareBridge Hospital uses the following Dockerfile:
 
 ```dockerfile
 FROM python:3.12-alpine
@@ -284,14 +269,33 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
-
-EXPOSE 5000
+COPY app.py .
+COPY templates/ ./templates/
+COPY static/ ./static/
 
 CMD ["python", "app.py"]
 ```
 
-### Docker Compose
+### Dockerfile Explanation
+
+| Instruction               | Purpose                                         |
+| ------------------------- | ----------------------------------------------- |
+| `FROM python:3.12-alpine` | Uses Python 3.12 with Alpine Linux              |
+| `WORKDIR /app`            | Sets the working directory inside the container |
+| `COPY requirements.txt .` | Copies the dependency file                      |
+| `RUN pip install ...`     | Installs the required Python packages           |
+| `COPY app.py .`           | Copies the Flask application                    |
+| `COPY templates/`         | Copies the HTML templates                       |
+| `COPY static/`            | Copies CSS, JavaScript and static assets        |
+| `CMD`                     | Starts the Flask application                    |
+
+The Dockerfile does not need to copy the SQLite database because the database is mounted through Docker Compose.
+
+---
+
+# 📦 Docker Compose
+
+The project uses `docker-compose.yml` to configure and run the CareBridge container.
 
 ```yaml
 services:
@@ -307,98 +311,81 @@ services:
 
 ### Configuration
 
-| Setting                              | Description                                  |
-| ------------------------------------ | -------------------------------------------- |
-| `build: .`                           | Builds the image from the project Dockerfile |
-| `container_name`                     | Sets the Docker container name               |
-| `5000:5000`                          | Maps host port 5000 to container port 5000   |
-| `./carebridge.db:/app/carebridge.db` | Persists SQLite data                         |
-| `restart: unless-stopped`            | Automatically restarts the container         |
+| Configuration                        | Purpose                                        |
+| ------------------------------------ | ---------------------------------------------- |
+| `build: .`                           | Builds the image from the Dockerfile           |
+| `container_name`                     | Sets the container name                        |
+| `5000:5000`                          | Maps host port 5000 to container port 5000     |
+| `./carebridge.db:/app/carebridge.db` | Mounts the SQLite database                     |
+| `restart: unless-stopped`            | Restarts the container unless manually stopped |
 
 ---
 
-# Database
+# 💾 Database Persistence
 
-CareBridge Hospital uses **SQLite** as its database engine.
+CareBridge Hospital uses SQLite.
 
-### Database file
+The primary database file is:
 
 ```text
 carebridge.db
 ```
 
-### SQL file
+The project also includes:
 
 ```text
 carebridge.sql
 ```
 
-The database is used to persist application records across sessions.
+The database is mounted into the Docker container using:
 
-### Main data areas
+```yaml
+volumes:
+  - ./carebridge.db:/app/carebridge.db
+```
 
-| Data         | Purpose                              |
-| ------------ | ------------------------------------ |
-| Patients     | Patient registration and information |
-| Appointments | Appointment records and statuses     |
-| Billing      | Patient billing information          |
-| Triage       | Severity and room assignment         |
-
-The Docker Compose volume ensures that the SQLite database remains available when the container is recreated.
+This allows database records to remain available when the Docker container is stopped or recreated.
 
 ---
 
-# ngrok Public Access
+# 🌐 Public Access with ngrok
 
-ngrok allows the locally running application to be accessed through a public HTTPS URL.
+ngrok allows CareBridge Hospital to be accessed through a public HTTPS URL.
 
-First, make sure CareBridge is running:
+First, make sure the application is running:
 
 ```powershell
 docker compose up --build -d
 ```
 
-Verify locally:
+Test the local application:
 
 ```text
 http://localhost:5000
 ```
 
-Then open a **second PowerShell window** and run:
+Once the local application is working, open a **second PowerShell window**.
+
+Run:
 
 ```powershell
 ngrok http 5000
 ```
 
-ngrok will provide a forwarding address similar to:
+ngrok will display a forwarding address similar to:
 
 ```text
-https://example.ngrok-free.app
+Forwarding
+https://example.ngrok-free.app -> http://localhost:5000
 ```
 
-Open the HTTPS address in a browser to access the application remotely.
-
-### ngrok workflow
-
-```text
-Local CareBridge
-      │
-      │ localhost:5000
-      ▼
-    ngrok
-      │
-      │ HTTPS
-      ▼
-Public Internet
-```
-
-> **Note:** The free ngrok URL is normally temporary and may change when the tunnel is restarted.
+Open the HTTPS URL in a browser to access CareBridge Hospital.
 
 ---
 
-# ngrok Authentication
+# 🔑 ngrok Authentication
 
-If authentication has not been configured, add your ngrok authentication token:
+If your ngrok authentication token has not been configured, run:
 
 ```powershell
 ngrok config add-authtoken "YOUR_NGROK_AUTHTOKEN"
@@ -410,152 +397,181 @@ Verify the configuration:
 ngrok config check
 ```
 
-### Security
-
-Never commit your actual authentication token to GitHub.
-
-Do not place it inside:
-
-* `README.md`
-* `app.py`
-* `docker-compose.yml`
-* `.env` files that are committed
-* Git commits
-* Screenshots shared publicly
+> **Security:** Never commit your real ngrok authentication token to GitHub or include it in this README.
 
 ---
 
-# Local Development
+# 🔄 Complete Startup Workflow
 
-Docker Compose is recommended for normal project execution.
+For a normal project demonstration, use two PowerShell windows.
 
-If you want to run Flask directly on the host machine, first install the dependencies:
-
-```powershell
-python -m pip install -r requirements.txt
-```
-
-Then:
+## Terminal 1 — Docker
 
 ```powershell
-python app.py
+cd "C:\Users\jiye1\Downloads\CareBridge-Hospital"
+
+docker compose up --build -d
+
+docker compose ps
 ```
 
-The application should be available at:
+Then open:
 
 ```text
 http://localhost:5000
 ```
 
-### Recommended workflow
+---
 
-For demonstrations:
+## Terminal 2 — ngrok
+
+```powershell
+ngrok http 5000
+```
+
+Copy the HTTPS forwarding URL provided by ngrok.
+
+Example:
 
 ```text
-Docker Compose
-     ↓
-Flask Container
-     ↓
-localhost:5000
-     ↓
-ngrok
-     ↓
-Public HTTPS URL
+https://example.ngrok-free.app
 ```
 
 ---
 
-# Validation
-
-CareBridge Hospital includes validation logic for the main workflows.
-
-### Patient validation
-
-* Patient ID cannot be empty
-* Patient name cannot be empty
-* Age must be valid
-* Duplicate patient IDs are prevented
-
-### Appointment validation
-
-* Patient must exist
-* Department must be valid
-* Appointment date must be valid
-* Appointment must be more than 7 days from the current date
-
-### Billing validation
-
-* Patient type must be valid
-* Laboratory test quantity must be valid
-
-### Triage validation
-
-* Severity must be an integer
-* Severity must be between 1 and 10
-
----
-
-# Testing
-
-The application should be tested using the following workflow.
+# 🧪 Testing
 
 ## Patient Registration
 
-1. Navigate to patient registration.
-2. Enter valid patient information.
-3. Submit the form.
-4. Verify successful registration.
-5. Confirm the record is stored in SQLite.
+1. Open the patient registration page.
+2. Enter a valid Patient ID.
+3. Enter the patient's name.
+4. Enter the patient's age.
+5. Submit the form.
+6. Confirm that the patient is registered.
+7. Verify the record in the database.
 
 ## Appointment Booking
 
 1. Select a registered patient.
 2. Select a department.
-3. Select a valid appointment date.
-4. Submit the appointment.
-5. Verify the confirmation page.
-6. Confirm the appointment is stored with the correct status.
+3. Select an appointment date.
+4. Ensure the date is more than 7 days from today.
+5. Submit the appointment.
+6. Verify the confirmation page.
+7. Confirm the appointment status.
 
 ## Billing
 
 1. Select the patient.
 2. Enter the required billing information.
-3. Submit the form.
-4. Verify the calculated total.
-5. Confirm the billing record is stored.
+3. Submit the billing form.
+4. Verify the calculated bill.
+5. Confirm the billing record.
 
 ## Triage
 
-1. Enter a severity score.
+1. Enter a severity score from 1 to 10.
 2. Submit the triage form.
 3. Verify the assigned room.
-4. Confirm the record is stored.
+4. Confirm the triage record.
 
 ---
 
-# Troubleshooting
+# 🔐 Validation
 
-## Flask module not found
+The application performs validation before processing submitted data.
 
-If you run:
+### Patient Registration
+
+* Patient ID cannot be empty.
+* Patient name cannot be empty.
+* Age must be valid.
+* Duplicate Patient IDs are prevented.
+
+### Appointment Booking
+
+* Patient must be registered.
+* Department must be valid.
+* Appointment date must be valid.
+* Appointment date must be more than 7 days from today.
+
+### Billing
+
+* Patient type must be valid.
+* Laboratory test quantity must be valid.
+
+### Triage
+
+* Severity must be a valid integer.
+* Severity must be between 1 and 10.
+
+---
+
+# 🧰 Useful Docker Commands
+
+### Start
 
 ```powershell
-python app.py
+docker compose up --build -d
 ```
 
-and receive:
+### Stop
+
+```powershell
+docker compose down
+```
+
+### Restart
+
+```powershell
+docker compose restart
+```
+
+### Check containers
+
+```powershell
+docker compose ps
+```
+
+### View logs
+
+```powershell
+docker compose logs
+```
+
+### Follow logs
+
+```powershell
+docker compose logs -f
+```
+
+### Rebuild
+
+```powershell
+docker compose down
+docker compose up --build -d
+```
+
+---
+
+# 🔧 Troubleshooting
+
+## Flask is not installed
+
+If running the application directly with Python produces:
 
 ```text
 ModuleNotFoundError: No module named 'flask'
 ```
 
-install the project dependencies:
+install the dependencies:
 
 ```powershell
 python -m pip install -r requirements.txt
 ```
 
-Alternatively, use Docker Compose:
+For the recommended setup, use Docker Compose instead:
 
 ```powershell
 docker compose up --build -d
@@ -571,7 +587,7 @@ Check:
 docker --version
 ```
 
-If Docker is not recognised, ensure Docker Desktop is installed and running.
+If Docker is not recognised, install Docker Desktop and ensure it is running.
 
 ---
 
@@ -583,13 +599,13 @@ Check:
 docker compose ps
 ```
 
-Then inspect the logs:
+View the logs:
 
 ```powershell
 docker compose logs
 ```
 
-Rebuild if necessary:
+Then rebuild:
 
 ```powershell
 docker compose down
@@ -598,7 +614,7 @@ docker compose up --build -d
 
 ---
 
-## Website changes are not appearing
+## Website is not updating
 
 Rebuild the Docker image:
 
@@ -613,7 +629,7 @@ Then refresh:
 http://localhost:5000
 ```
 
-You can also monitor the application:
+If the problem continues, check:
 
 ```powershell
 docker compose logs -f
@@ -629,9 +645,9 @@ Check:
 ngrok version
 ```
 
-If the command is not recognised, ensure the ngrok executable directory has been added to the Windows PATH.
+If PowerShell cannot find ngrok, make sure ngrok is installed and its executable directory is included in the Windows PATH.
 
-After updating PATH, close and reopen PowerShell.
+After updating PATH, close PowerShell and open a new PowerShell window.
 
 Then run:
 
@@ -649,13 +665,13 @@ ngrok http 5000
 
 ## ngrok cannot connect
 
-First verify that the application works locally:
+First verify that CareBridge works locally:
 
 ```text
 http://localhost:5000
 ```
 
-Then check Docker:
+Then check:
 
 ```powershell
 docker compose ps
@@ -667,7 +683,7 @@ If the container is stopped:
 docker compose up --build -d
 ```
 
-Finally:
+Then start:
 
 ```powershell
 ngrok http 5000
@@ -675,9 +691,9 @@ ngrok http 5000
 
 ---
 
-# Git Workflow
+# 🔀 Git Workflow
 
-The project uses Git for version control.
+The project uses Git for version control and GitHub for repository hosting.
 
 ### Check status
 
@@ -697,7 +713,7 @@ git add .
 git commit -m "Update CareBridge Hospital"
 ```
 
-### Pull the latest version
+### Pull latest changes
 
 ```powershell
 git pull --rebase origin main
@@ -729,100 +745,57 @@ git push
 
 ---
 
-# Security Considerations
+# 🔒 Security Considerations
 
-CareBridge Hospital is an **educational project** and should not be used for real clinical operations.
+CareBridge Hospital is an **educational project** and is not intended for production healthcare use.
 
-For demonstration purposes:
+For demonstrations:
 
 * Do not enter real patient information.
 * Do not store real medical records.
 * Do not expose sensitive information through ngrok.
 * Keep authentication tokens private.
-* Do not commit credentials to GitHub.
-* Use appropriate authentication and authorisation before production deployment.
-* SQLite is suitable for this project but may not be appropriate for a production hospital system.
+* Never commit credentials to GitHub.
+* Do not share your ngrok authentication token.
+* SQLite is intended for this project's development and demonstration requirements.
+
+A production healthcare system would require additional security controls, authentication, authorisation, encryption, auditing, secure infrastructure, and compliance with applicable healthcare regulations.
 
 ---
 
-# Future Improvements
+# 🚧 Future Improvements
 
-Potential future development includes:
+Potential future enhancements include:
 
-* User authentication and role-based access control
+* User authentication
+* Role-based access control
 * Doctor and staff accounts
 * Advanced appointment scheduling
-* Email/SMS appointment notifications
-* Improved patient search
+* Appointment notifications
+* Patient search
 * Medical record management
 * Dashboard analytics
 * Audit logging
-* REST API integration
-* Production-grade database such as PostgreSQL
-* Cloud deployment
+* REST API
 * Automated testing
-* CI/CD pipeline
-* Improved security and encryption
+* CI/CD integration
+* Cloud deployment
+* PostgreSQL or another production database
+* Improved security and access control
 
 ---
 
-# Project Workflow
+# 🤖 AI-Assisted Development
 
-```text
-                  ┌─────────────────┐
-                  │   Development   │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │   Flask App     │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │     SQLite      │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │     Docker      │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │ Docker Compose  │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │  localhost:5000 │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │      ngrok      │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │  Public HTTPS   │
-                  └─────────────────┘
-```
+AI tools were used as learning and development assistants during the project.
 
----
+AI assistance supported areas including:
 
-# AI-Assisted Development
-
-AI tools were used as development and learning assistants during the project.
-
-AI assistance was used for areas including:
-
-* Flask development
-* Python programming
-* SQLite database logic
+* Python and Flask development
+* SQLite database development
 * HTML and CSS
 * JavaScript
-* Docker configuration
+* Docker
 * Docker Compose
 * ngrok configuration
 * Git and GitHub troubleshooting
@@ -831,44 +804,48 @@ AI assistance was used for areas including:
 * Documentation
 * Project presentation preparation
 
-AI assistance was used to support development and learning. The resulting application was implemented, tested, and reviewed as part of the project.
+AI was used to support the development and learning process. The application was implemented, tested, and reviewed as part of the project.
 
 ---
 
-# Project Information
+# 📊 Project Information
 
-| Property         | Value                               |
+| Property         | Details                             |
 | ---------------- | ----------------------------------- |
 | Project          | CareBridge Hospital                 |
-| Type             | Hospital Management Web Application |
-| Backend          | Flask                               |
-| Language         | Python                              |
-| Database         | SQLite                              |
+| Project Type     | Hospital Management Web Application |
+| Backend          | Python / Flask                      |
 | Frontend         | HTML / CSS / JavaScript             |
+| Database         | SQLite                              |
 | Containerisation | Docker                              |
 | Orchestration    | Docker Compose                      |
-| Public Tunnel    | ngrok                               |
+| Public Access    | ngrok                               |
 | Version Control  | Git                                 |
 | Repository       | GitHub                              |
 | Application Port | `5000`                              |
 
 ---
 
-# Repository
+# 🔗 Repository
 
-**GitHub:**
+**GitHub Repository**
+
 https://github.com/jiye130309-arch/CareBridge-Hospital
 
 ---
 
-# Educational Disclaimer
+# ⚠️ Disclaimer
 
-CareBridge Hospital is developed for **educational and demonstration purposes**.
+CareBridge Hospital is developed for **educational and demonstration purposes only**.
 
-It is not intended to replace a production hospital information system and must not be used to process real patient or medical data.
+This application is not intended to be used as a production hospital information system and must not be used to process real patient, medical, or other sensitive healthcare information.
 
 ---
 
-## CareBridge Hospital
+<div align="center">
 
-**Digitalising Hospital Management Through Web Technology.**
+### 🏥 CareBridge Hospital
+
+**Digitalising Hospital Management Through Web Technology**
+
+</div>
